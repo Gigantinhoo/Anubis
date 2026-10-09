@@ -21,16 +21,17 @@
         <div><strong>ANUBIS</strong><span>FERRAMENTA DE CATÁLOGO</span></div>
       </a>
       <div class="actions">
-        <button class="btn" id="load-online" type="button">Carregar catálogo publicado</button>
-        <label class="btn" for="import-file">Importar arquivo JSON<input id="import-file" type="file" accept=".json,application/json" hidden></label>
-        <button class="btn gold" id="export-top" type="button">Baixar catálogo atualizado</button>
+        <button class="btn" id="load-online" type="button">Sincronizar catálogo</button>
+        <label class="btn" for="import-file">Importar JSON<input id="import-file" type="file" accept=".json,application/json" hidden></label>
+        <button class="btn gold" id="publish-online" type="button">Publicar no site</button>
+        <button class="btn" id="export-top" type="button">Baixar JSON</button>
       </div>
     </header>
 
     <section class="intro">
       <div><h1>Gerenciar <em>imóveis.</em></h1><p>Altere preço, endereço e datas, ou adicione várias fotos à mesma casa. Não precisa editar código.</p></div>
     </section>
-    <div class="notice"><strong>Catálogo sincronizado automaticamente.</strong> Ao abrir esta ferramenta, ela carrega a lista atual publicada no site. Depois de editar, clique em “Baixar catálogo atualizado” e envie o arquivo <b>imoveis.json</b> para a raiz do repositório GitHub, substituindo o antigo. O site público só recebe as alterações quando esse arquivo for enviado.</div>
+    <div class="notice"><strong>Catálogo conectado ao GitHub.</strong> Esta ferramenta carrega os imóveis diretamente do arquivo oficial <b>imoveis.json</b>. Para aplicar as alterações no site, clique em <b>Publicar no site</b>. No primeiro uso, será solicitado um token de acesso do GitHub com permissão de escrita somente no repositório ANUBIS. O token fica apenas na memória desta aba e não é salvo no arquivo nem no navegador. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Criar token de acesso fino</a>.</div>
 
     <div class="layout">
       <aside class="sidebar">
@@ -47,7 +48,7 @@
             <div class="form-grid">
               <div class="field full"><label for="title">Nome do anúncio *</label><input id="title" required placeholder="Ex.: Casa com pátio no centro"></div>
               <div class="field"><label for="price">Valor mensal (R$) *</label><input id="price" type="number" min="0" step="50" required placeholder="1200"></div>
-              <div class="field"><label for="status">Situação</label><select id="status"><option value="demo">Demonstração</option><option value="available">Disponível</option><option value="soon">Em breve</option><option value="rented">Alugado</option></select></div>
+              <div class="field"><label for="status">Disponibilidade e botão de contato</label><select id="status"><option value="available">Disponível — mostrar WhatsApp</option><option value="unavailable">Indisponível — ocultar WhatsApp</option><option value="soon">Em breve — ocultar WhatsApp</option><option value="rented">Alugado — ocultar WhatsApp</option></select><small>O botão de WhatsApp só aparece quando a casa estiver como Disponível.</small></div>
               <div class="field full"><label for="neighborhood">Localização que aparece no site *</label><input id="neighborhood" required placeholder="Ex.: Centro, Corupá/SC"></div>
               <div class="field full"><label for="address">Endereço completo (opcional)</label><input id="address" placeholder="Rua e número, se quiser divulgar"></div>
               <div class="field"><label for="dateListed">Data do anúncio</label><input id="dateListed" type="date"></div>
@@ -57,6 +58,7 @@
               <div class="field"><label for="area">Área</label><input id="area" placeholder="Ex.: 80 m²"></div>
               <div class="field"><label for="features">Resumo curto</label><input id="features" placeholder="Ex.: 2 quartos · garagem"></div>
               <div class="field full"><label for="description">Descrição</label><textarea id="description" placeholder="Descreva os ambientes, pátio, garagem e outros detalhes."></textarea></div>
+              <div class="field full"><label for="whatsappMessage">Mensagem pronta do WhatsApp</label><textarea id="whatsappMessage" placeholder="Olá! Gostaria de saber mais sobre {{nome}}."></textarea><small>Personalize esta mensagem para esta casa. Campos automáticos: {{nome}}, {{localizacao}}, {{valor}}, {{quartos}} e {{banheiros}}.</small></div>
               <div class="field full"><label for="badge">Etiqueta na foto</label><input id="badge" placeholder="Ex.: DISPONÍVEL ou FOTOS DE TESTE"><label class="checkline"><input id="demo" type="checkbox"> Este anúncio é apenas demonstração / não publicar como oferta real</label></div>
             </div>
 
@@ -81,18 +83,19 @@
   </div>
 
   <script>
-    const STARTER_PROPERTIES = [
-      {id:"casa-teste-anubis",title:"Casa de teste ANUBIS",neighborhood:"Corupá, SC · localização a confirmar",address:"",bedrooms:null,bathrooms:null,area:"",price:1200,dateListed:"",availableFrom:"",features:"3 fotos de teste enviadas por você",description:"Anúncio demonstrativo. As informações ainda precisam ser confirmadas.",status:"demo",badge:"FOTOS DE TESTE",demo:true,image:"assets/images/imoveis/casa-teste/fachada-teste.jpeg",gallery:[{src:"assets/images/imoveis/casa-teste/fachada-teste.jpeg",alt:"Fachada da casa"},{src:"assets/images/imoveis/casa-teste/area-coberta-teste.jpg",alt:"Área coberta"},{src:"assets/images/imoveis/casa-teste/patio-teste.jpg",alt:"Pátio e acesso para veículos"}],photoCredit:"Fotos de teste fornecidas por você",photoSource:""},
-      {id:"casa-demo-02",title:"Casa demonstrativa 02",neighborhood:"Localização fictícia · não disponível para locação",address:"",bedrooms:2,bathrooms:null,area:"",price:1000,dateListed:"",availableFrom:"",features:"2 quartos · dados fictícios",description:"Imóvel e valor fictícios, incluídos somente para testar o catálogo.",status:"demo",badge:"IMÓVEL FICTÍCIO",demo:true,image:"https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000",gallery:[{src:"https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000",alt:"Imagem ilustrativa de residência"}],photoCredit:"Foto ilustrativa de Max Vakhtbovych / Pexels",photoSource:"https://www.pexels.com/photo/modern-house-exterior-7587880/"},
-      {id:"casa-demo-03",title:"Casa demonstrativa 03",neighborhood:"Localização fictícia · não disponível para locação",address:"",bedrooms:3,bathrooms:null,area:"",price:1450,dateListed:"",availableFrom:"",features:"3 quartos · dados fictícios",description:"Imóvel e valor fictícios, incluídos somente para testar o catálogo.",status:"demo",badge:"IMÓVEL FICTÍCIO",demo:true,image:"https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000",gallery:[{src:"https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000",alt:"Imagem ilustrativa de residência moderna"}],photoCredit:"Foto ilustrativa de alleksana / Pexels",photoSource:"https://www.pexels.com/photo/modern-house-facade-10610731/"},
-      {id:"casa-demo-04",title:"Casa demonstrativa 04",neighborhood:"Localização fictícia · não disponível para locação",address:"",bedrooms:2,bathrooms:null,area:"",price:1700,dateListed:"",availableFrom:"",features:"2 quartos · dados fictícios",description:"Imóvel e valor fictícios, incluídos somente para testar o catálogo.",status:"demo",badge:"IMÓVEL FICTÍCIO",demo:true,image:"https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000",gallery:[{src:"https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000",alt:"Imagem ilustrativa de casa contemporânea"}],photoCredit:"Foto ilustrativa de Max Vakhtbovych / Pexels",photoSource:"https://www.pexels.com/photo/modern-house-exterior-design-8134821/"}
-    ];
-    let properties = JSON.parse(JSON.stringify(STARTER_PROPERTIES));
-    let selectedId = properties[0].id;
+    let properties = [];
+    let selectedId = null;
     let galleryDraft = [];
     let creating = false;
+    let githubToken = ""; // Nunca persistir o token em localStorage/sessionStorage.
+    let catalogBlobSha = "";
+    const GITHUB_OWNER = "Gigantinhoo";
+    const GITHUB_REPO = "Anubis";
+    const GITHUB_BRANCH = "main";
+    const GITHUB_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
     const $ = (id) => document.getElementById(id);
-    const fields = ["title","price","status","neighborhood","address","dateListed","availableFrom","bedrooms","bathrooms","area","features","description","badge"];
+    const fields = ["title","price","status","neighborhood","address","dateListed","availableFrom","bedrooms","bathrooms","area","features","description","whatsappMessage","badge"];
+
 
     function clone(value){return JSON.parse(JSON.stringify(value));}
     function priceText(value){return typeof value === "number" ? value.toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0})+"/mês" : "Valor a informar";}
@@ -106,13 +109,24 @@
       properties.forEach(property=>{
         const button=document.createElement("button");button.type="button";button.className="property-choice"+(property.id===selectedId&&!creating?" active":"");
         const title=document.createElement("strong");title.textContent=property.title||"Novo imóvel sem nome";
-        const details=document.createElement("span");details.textContent=priceText(property.price)+" · "+(property.neighborhood||"Localização a informar");
+        const details=document.createElement("span");const stateLabel=({available:"WhatsApp visível",unavailable:"WhatsApp oculto",soon:"Em breve",rented:"Alugado",demo:"Demonstração"})[normalizedStatus(property)];details.textContent=priceText(property.price)+" · "+(property.neighborhood||"Localização a informar")+" · "+stateLabel;
         button.append(title,details);button.addEventListener("click",()=>selectProperty(property.id));list.appendChild(button);
       });
     }
     function setMessage(message,isError=false){$("status-message").textContent=message;$("status-message").style.color=isError?"var(--danger)":"var(--green)";}
+    const DEFAULT_WHATSAPP_MESSAGE = "Olá! Gostaria de saber mais informações sobre {{nome}}. Poderia me passar os detalhes e as condições de locação?";
+    function normalizedStatus(property){
+      const valid = ["available","unavailable","soon","rented"];
+      if(valid.includes(property.status)) return property.status;
+      // Compatibilidade com imóveis antigos que usavam status="demo".
+      return property.id === "casa-teste-anubis" ? "available" : (property.demo ? "unavailable" : "available");
+    }
     function loadForm(property){
-      fields.forEach(field=>$(field).value=property[field]??"");
+      fields.forEach(field=>{
+        if(field === "status") $(field).value=normalizedStatus(property);
+        else if(field === "whatsappMessage") $(field).value=property.whatsappMessage || DEFAULT_WHATSAPP_MESSAGE;
+        else $(field).value=property[field]??"";
+      });
       $("demo").checked=!!property.demo;
       galleryDraft=clone(safeGallery(property));
       $("form-heading").textContent=creating?"NOVA CASA":"EDITAR IMÓVEL";
@@ -148,7 +162,8 @@
         availableFrom:$("availableFrom").value,
         features:$("features").value.trim(),
         description:$("description").value.trim(),
-        status:$("demo").checked?"demo":$("status").value,
+        whatsappMessage:$("whatsappMessage").value.trim(),
+        status:$("status").value,
         badge:$("badge").value.trim(),
         demo:$("demo").checked,
         image:galleryDraft[0]?.src||"",
@@ -157,26 +172,28 @@
         photoSource:existing?.photoSource || ""
       };
     }
-    $("property-form").addEventListener("submit",event=>{
-      event.preventDefault();const data=readForm();
-      if(!data.title||!data.neighborhood){setMessage("Preencha o nome e a localização.",true);return;}
-      if(!Number.isFinite(data.price)||data.price<0){setMessage("Informe um valor mensal válido.",true);return;}
+    function saveCurrentProperty(){
+      if(!$('property-form').reportValidity()) return false;
+      const data=readForm();
+      if(!data.title||!data.neighborhood){setMessage("Preencha o nome e a localização.",true);return false;}
+      if(!Number.isFinite(data.price)||data.price<0){setMessage("Informe um valor mensal válido.",true);return false;}
       if(creating){properties.push(data);selectedId=data.id;creating=false;}else{
-        const index=properties.findIndex(p=>p.id===selectedId);if(index<0){setMessage("Não encontrei esta casa. Selecione novamente na lista.",true);return;}properties[index]=data;selectedId=data.id;
+        const index=properties.findIndex(p=>p.id===selectedId);
+        if(index<0){setMessage("Não encontrei este imóvel. Sincronize o catálogo e selecione novamente.",true);return false;}
+        properties[index]=data;selectedId=data.id;
       }
-      renderList();loadForm(properties.find(p=>p.id===selectedId));setMessage("Casa salva nesta sessão. Baixe o catálogo atualizado para guardar o arquivo.");
-    });
-    $("demo").addEventListener("change", () => {
-      if ($("demo").checked) $("status").value = "demo";
-      else if ($("status").value === "demo") $("status").value = "available";
-    });
-    $("status").addEventListener("change", () => {
-      if ($("status").value === "demo") $("demo").checked = true;
-      else $("demo").checked = false;
+      renderList();
+      loadForm(properties.find(p=>p.id===selectedId));
+      setMessage("Alterações guardadas no gerenciador. Clique em ‘Publicar no site’ para torná-las públicas.");
+      return true;
+    }
+    $("property-form").addEventListener("submit",event=>{
+      event.preventDefault();
+      saveCurrentProperty();
     });
     $("new-property").addEventListener("click",()=>{
       creating=true;selectedId=null;galleryDraft=[];
-      const draft={title:"",price:0,status:"available",neighborhood:"",address:"",dateListed:new Date().toISOString().slice(0,10),availableFrom:"",bedrooms:null,bathrooms:null,area:"",features:"",description:"",badge:"DISPONÍVEL",demo:false,gallery:[],image:""};
+      const draft={title:"",price:0,status:"available",neighborhood:"",address:"",dateListed:new Date().toISOString().slice(0,10),availableFrom:"",bedrooms:null,bathrooms:null,area:"",features:"",description:"",whatsappMessage:DEFAULT_WHATSAPP_MESSAGE,badge:"DISPONÍVEL",demo:false,gallery:[],image:""};
       loadForm(draft);renderList();$("title").focus();
     });
     $("delete-property").addEventListener("click",()=>{
@@ -212,40 +229,173 @@
       if(creating){setMessage("Salve a casa nova antes de baixar o catálogo.",true);return;}
       const blob=new Blob([JSON.stringify(properties,null,2)],{type:"application/json;charset=utf-8"});
       const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download="imoveis.json";document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
-      setMessage("Arquivo imoveis.json baixado. Envie-o para a raiz do repositório GitHub, substituindo o arquivo atual.");
+      setMessage("Backup imoveis.json baixado. Para atualizar o site sem fazer upload manual, use ‘Publicar no site’.");
     }
     $("export-top").addEventListener("click",downloadJson);
-    $("load-online").addEventListener("click", async () => {
-      try {
-        setMessage("Carregando catálogo publicado…");
-        const response = await fetch("imoveis.json?atualizado=" + Date.now(), { cache: "no-store" });
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        const imported = await response.json();
-        if (!Array.isArray(imported)) throw new Error("O arquivo imoveis.json não tem o formato esperado.");
-        properties = imported;
-        creating = false;
-        selectedId = properties[0]?.id || null;
-        renderList();
-        if (selectedId) selectProperty(selectedId);
-        setMessage("Catálogo publicado carregado. Edite as casas e baixe o JSON no final.");
-      } catch (error) {
-        setMessage("Não consegui carregar online. Abra esta ferramenta no endereço do GitHub Pages ou use ‘Importar arquivo JSON’.", true);
+    function githubHeaders(withAuth=false){
+      const headers={"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};
+      if(withAuth && githubToken) headers.Authorization="Bearer "+githubToken;
+      return headers;
+    }
+    function encodeUtf8Base64(text){
+      const bytes=new TextEncoder().encode(text);let binary="";
+      for(let offset=0;offset<bytes.length;offset+=0x8000){binary+=String.fromCharCode(...bytes.subarray(offset,offset+0x8000));}
+      return btoa(binary);
+    }
+    function decodeBase64Utf8(base64){
+      const binary=atob(String(base64||"").replace(/\s/g,""));
+      const bytes=Uint8Array.from(binary,character=>character.charCodeAt(0));
+      return new TextDecoder("utf-8").decode(bytes);
+    }
+    function fileApiUrl(path){
+      return GITHUB_API+"/"+path.split("/").map(encodeURIComponent).join("/");
+    }
+    async function getRemoteCatalog(withAuth=false){
+      const response=await fetch(fileApiUrl("imoveis.json")+"?ref="+encodeURIComponent(GITHUB_BRANCH)+"&t="+Date.now(),{cache:"no-store",headers:githubHeaders(withAuth)});
+      const body=await response.json().catch(()=>({}));
+      if(!response.ok){
+        const message=body.message||("HTTP "+response.status);
+        if(response.status===401) githubToken="";
+        throw new Error("GitHub não conseguiu ler imoveis.json: "+message);
       }
-    });
+      let raw="";
+      if(body.encoding==="base64"&&body.content) raw=decodeBase64Utf8(body.content);
+      else if(body.download_url){
+        const rawResponse=await fetch(body.download_url+"?t="+Date.now(),{cache:"no-store"});
+        if(!rawResponse.ok)throw new Error("Não consegui baixar o catálogo do GitHub.");
+        raw=await rawResponse.text();
+      }else throw new Error("O GitHub não retornou o conteúdo de imoveis.json.");
+      const imported=JSON.parse(raw);
+      if(!Array.isArray(imported))throw new Error("O arquivo imoveis.json não contém uma lista de imóveis.");
+      return {properties:imported,sha:body.sha};
+    }
+    async function loadRemoteCatalog(){
+      const button=$("load-online");button.disabled=true;
+      try{
+        setMessage("Sincronizando com o catálogo oficial do GitHub…");
+        const remote=await getRemoteCatalog(false);
+        properties=remote.properties;
+        catalogBlobSha=remote.sha||"";
+        creating=false;
+        selectedId=properties[0]?.id||null;
+        renderList();
+        if(selectedId)selectProperty(selectedId);
+        else{$("property-form").reset();galleryDraft=[];renderGallery();creating=true;}
+        setMessage("Sincronizado: "+properties.length+" imóvel(is) carregado(s) diretamente do GitHub.");
+      }catch(error){
+        properties=[];selectedId=null;creating=true;galleryDraft=[];renderList();renderGallery();
+        $("property-form").reset();
+        setMessage(error.message+". Nenhum imóvel fictício foi exibido. Confirme a conexão e tente sincronizar novamente.",true);
+      }finally{button.disabled=false;}
+    }
+    $("load-online").addEventListener("click",loadRemoteCatalog);
+
+    function safePathSegment(value){
+      return String(value||"imovel").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9-]+/g,"-").replace(/^-+|-+$/g,"")||"imovel";
+    }
+    async function uploadDataUrlPhoto(property,photo,index){
+      const match=String(photo.src||"").match(/^data:(image\/(?:jpeg|jpg|png|webp));base64,([\s\S]+)$/i);
+      if(!match)throw new Error("Uma das imagens não está em um formato compatível.");
+      const mime=match[1].toLowerCase();
+      const extension=(mime.includes("png")?"png":mime.includes("webp")?"webp":"jpg");
+      const propertyFolder=safePathSegment(property.id||property.title);
+      const unique=Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8);
+      const path=`assets/images/imoveis/${propertyFolder}/${propertyFolder}-${unique}-${index+1}.${extension}`;
+      const url=fileApiUrl(path);
+      const response=await fetch(url,{
+        method:"PUT",
+        headers:{...githubHeaders(true),"Content-Type":"application/json"},
+        body:JSON.stringify({message:"Adiciona foto de imóvel pelo gerenciador ANUBIS",content:match[2].replace(/\s/g,""),branch:GITHUB_BRANCH})
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok){
+        if(response.status===401)githubToken="";
+        throw new Error("Falha ao enviar uma foto para o GitHub: "+(result.message||("HTTP "+response.status)));
+      }
+      return path;
+    }
+    async function publishCatalog(){
+      if(!saveCurrentProperty())return;
+      if(!catalogBlobSha){setMessage("Sincronize com o GitHub antes de publicar.",true);return;}
+      if(!githubToken){
+        const entered=prompt("Cole um token Fine-grained do GitHub com acesso somente ao repositório Anubis e permissão Contents: Read and write. O token não será salvo.");
+        if(!entered)return;
+        githubToken=entered.trim();
+      }
+      const button=$("publish-online");button.disabled=true;
+      try{
+        setMessage("Verificando se o catálogo remoto não mudou…");
+        const remoteBefore=await getRemoteCatalog(true);
+        if(remoteBefore.sha!==catalogBlobSha){
+          catalogBlobSha=remoteBefore.sha||"";
+          throw new Error("O catálogo no GitHub mudou desde a última sincronização. Clique em ‘Sincronizar catálogo’, confira a lista e tente publicar novamente para não sobrescrever mudanças recentes.");
+        }
+        const toPublish=clone(properties);
+        let uploaded=0;
+        const imagesToUpload=toPublish.reduce((count,property)=>count+safeGallery(property).filter(photo=>String(photo.src||"").startsWith("data:image/")).length,0);
+        for(let propertyIndex=0;propertyIndex<toPublish.length;propertyIndex++){
+          const property=toPublish[propertyIndex];
+          const gallery=safeGallery(property);
+          const newGallery=[];
+          for(let photoIndex=0;photoIndex<gallery.length;photoIndex++){
+            const photo=clone(gallery[photoIndex]);
+            if(String(photo.src||"").startsWith("data:image/")){
+              setMessage(`Enviando fotos para o GitHub (${++uploaded} de ${imagesToUpload})…`);
+              photo.src=await uploadDataUrlPhoto(property,photo,photoIndex);
+            }
+            newGallery.push(photo);
+          }
+          property.gallery=newGallery;
+          property.image=newGallery[0]?.src||"";
+        }
+        setMessage("Publicando o catálogo de imóveis…");
+        const latest=await getRemoteCatalog(true);
+        if(latest.sha!==catalogBlobSha){
+          catalogBlobSha=latest.sha||"";
+          throw new Error("O catálogo remoto mudou durante a publicação. Sincronize antes de tentar novamente.");
+        }
+        const payload={
+          message:"Atualiza catálogo de imóveis pelo gerenciador ANUBIS",
+          content:encodeUtf8Base64(JSON.stringify(toPublish,null,2)),
+          sha:latest.sha,
+          branch:GITHUB_BRANCH
+        };
+        const response=await fetch(fileApiUrl("imoveis.json"),{
+          method:"PUT",
+          headers:{...githubHeaders(true),"Content-Type":"application/json"},
+          body:JSON.stringify(payload)
+        });
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok){
+          if(response.status===401)githubToken="";
+          throw new Error("O GitHub recusou a publicação: "+(result.message||("HTTP "+response.status)));
+        }
+        properties=toPublish;
+        catalogBlobSha=result.content?.sha||"";
+        renderList();
+        if(selectedId&&properties.some(property=>property.id===selectedId))selectProperty(selectedId);
+        else if(properties.length)selectProperty(properties[0].id);
+        setMessage("Publicado no GitHub! O site usa esse mesmo imoveis.json e será atualizado quando o GitHub Pages terminar a publicação, geralmente em alguns minutos.");
+      }catch(error){
+        setMessage(error.message||"Não foi possível publicar o catálogo.",true);
+      }finally{button.disabled=false;}
+    }
+    $("publish-online").addEventListener("click",publishCatalog);
+
     $("import-file").addEventListener("change",async event=>{
       const file=event.target.files?.[0];if(!file)return;
       try{
         const imported=JSON.parse(await file.text());if(!Array.isArray(imported))throw new Error("O arquivo deve conter uma lista de imóveis.");
         if(!confirm("Carregar "+imported.length+" imóveis do arquivo selecionado? Isso substitui a lista atual desta sessão.")){event.target.value="";return;}
         properties=imported;creating=false;selectedId=properties[0]?.id||null;renderList();if(selectedId)selectProperty(selectedId);else{creating=true;galleryDraft=[];renderGallery();}
-        setMessage("Catálogo carregado. Faça suas alterações e clique em ‘Baixar catálogo atualizado’ quando terminar.");
+        setMessage("Arquivo importado para edição nesta sessão. Para atualizar o site, publique o catálogo no GitHub.");
       }catch(error){setMessage("Não consegui ler o JSON: "+error.message,true);}
       event.target.value="";
     });
 
-    renderList();selectProperty(selectedId);
-    // Importante: abre já com a versão publicada; não deixa a lista fictícia de demonstração como padrão.
-    $("load-online").click();
+    renderList();
+    renderGallery();
+    loadRemoteCatalog();
   </script>
 </body>
 </html>
