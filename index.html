@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0a">
+  <meta name="description" content="ANUBIS Imóveis: casas para aluguel residencial em Corupá, Santa Catarina. Consulte opções e fale diretamente pelo WhatsApp.">
+  <title>ANUBIS Imóveis | Casas para alugar em Corupá</title>
+  <link rel="icon" href="assets/images/logo-anubis-original.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="styles/style.css">
+  <script src="scripts/main.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="ANUBIS Imóveis - início">
+      <img src="assets/images/logo-anubis-original.jpeg" alt="Logotipo ANUBIS" class="brand-logo">
+      <span class="brand-text"><strong>ANUBIS</strong><small>IMÓVEIS · CORUPÁ/SC</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+      <a href="#inicio">Início</a><a href="#imoveis">Imóveis</a><a href="#sobre">Sobre</a><a href="#contato" class="nav-cta">Fale conosco</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-text">
+        <p class="eyebrow"><span></span> LOCAÇÃO RESIDENCIAL · CORUPÁ, SC</p>
+        <h1>Seu próximo lar<br><em>começa aqui.</em></h1>
+        <p class="hero-copy">Encontre um lugar para chamar de seu. Conheça as opções de locação residencial da ANUBIS e fale diretamente com nossa equipe.</p>
+        <a class="button button-gold" href="#imoveis">Explorar imóveis <span aria-hidden="true">↗</span></a>
+        <div class="hero-note"><span class="note-line"></span><span>Atendimento direto e próximo, do primeiro contato à visita.</span></div>
+      </div>
+      <div class="hero-art" aria-label="Identidade visual ANUBIS">
+        <div class="hero-ring"><img src="assets/images/logo-anubis-original.jpeg" alt="Símbolo dourado de Anúbis da marca ANUBIS"></div>
+        <span class="art-caption">UM NOVO CAPÍTULO COMEÇA EM CASA</span>
+      </div>
+    </section>
+
+    <section class="search-band" aria-label="Buscar imóveis">
+      <div class="search-intro"><span class="section-number">01 / BUSCA</span><strong>Vamos encontrar sua casa?</strong></div>
+      <form id="filter-form" class="filters">
+        <label class="search-input"><span>Buscar</span><input id="search-text" type="search" placeholder="Bairro ou característica" autocomplete="off"></label>
+        <label><span>Quartos</span><select id="bedrooms"><option value="">Qualquer</option><option value="1">1 ou mais</option><option value="2">2 ou mais</option><option value="3">3 ou mais</option></select></label>
+        <button type="submit" class="button button-dark">Buscar <span aria-hidden="true">⌕</span></button>
+      </form>
+    </section>
+
+    <section class="listings section-wrap" id="imoveis">
+      <div class="section-heading">
+        <div><p class="eyebrow">PORTFÓLIO ANUBIS</p><h2>Imóveis em destaque<span>.</span></h2></div>
+        <p class="heading-side">Locação residencial<br>em Corupá e região</p>
+      </div>
+      <div class="test-notice"><span class="notice-dot"></span><div><strong>Prévia do catálogo</strong><p>As fotos abaixo são material de teste. Informações como preço, endereço e disponibilidade ainda não foram confirmadas.</p></div></div>
+      <div class="property-grid" id="property-grid" aria-live="polite"></div>
+      <p class="no-results" id="no-results" hidden>Nenhum imóvel corresponde à busca. Tente outro termo.</p>
+    </section>
+
+    <section class="about-section" id="sobre">
+      <div class="about-mark"><img src="assets/images/logo-anubis-original.jpeg" alt="Marca ANUBIS"></div>
+      <div class="about-copy"><p class="eyebrow">SOBRE A ANUBIS</p><h2>Mais que um endereço.<br><em>Um lugar para viver.</em></h2><p>A ANUBIS está construindo uma experiência simples e transparente para quem procura aluguel residencial em Corupá, Santa Catarina. Fale conosco para consultar os imóveis disponíveis e combinar uma visita.</p><a class="text-link" href="#contato">Entre em contato <span aria-hidden="true">↗</span></a></div>
+    </section>
+
+    <section class="contact-section" id="contato">
+      <div><p class="eyebrow">VAMOS CONVERSAR?</p><h2>Seu próximo endereço<br>pode estar aqui.</h2><p>Fale com a ANUBIS pelo WhatsApp para saber mais sobre as opções de locação residencial.</p></div>
+      <a class="button button-gold whatsapp-link" href="https://wa.me/5547992024656?text=Ol%C3%A1%21%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20casas%20para%20alugar%20em%20Corup%C3%A1." target="_blank" rel="noopener noreferrer">Conversar pelo WhatsApp <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="footer-brand" href="#inicio">ANUBIS<span> IMÓVEIS</span></a><p>Locação residencial · Corupá, Santa Catarina</p><a href="#contato">Contato <span aria-hidden="true">↗</span></a><small>© <span id="year"></span> ANUBIS Imóveis. Todos os direitos reservados.</small></footer>
+  <a class="whatsapp-float whatsapp-link" href="https://wa.me/5547992024656?text=Ol%C3%A1%21%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20casas%20para%20alugar%20em%20Corup%C3%A1." target="_blank" rel="noopener noreferrer" aria-label="Falar com a ANUBIS pelo WhatsApp"><span aria-hidden="true">☏</span></a>
+</body>
+</html>
