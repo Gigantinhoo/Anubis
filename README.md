@@ -1,28 +1,35 @@
 # ANUBIS Imóveis
 
-Site institucional responsivo para aluguel residencial em Corupá, Santa Catarina.
+Site responsivo para locação residencial em Corupá, Santa Catarina.
 
-## Como editar casas e valores (jeito fácil)
+## Editar imóveis sem programar
 
-Abra o arquivo `scripts/imoveis-data.js`. Cada bloco entre chaves representa uma casa. Para mudar o aluguel, altere o número em `price`; por exemplo, `price: 1200` mostra R$ 1.200/mês. Para mudar a foto principal, altere `image`. Para a galeria, adicione ou remova itens dentro de `gallery`. Para cadastrar uma casa nova, copie um bloco completo e dê a ele um `id` único.
+Use a ferramenta separada `gerenciar-imoveis.html` do pacote **ANUBIS - Ferramenta de Catálogo**. Não é preciso abrir nem alterar código.
 
-Depois de salvar as alterações, faça upload/commit no GitHub. O GitHub Pages atualiza o site depois de concluir a publicação.
+1. Baixe o `imoveis.json` atual no GitHub e abra a ferramenta local no navegador.
+2. Clique em **Importar arquivo JSON** e escolha esse arquivo.
+3. Selecione a casa para alterar preço, localização, datas, quartos e descrição.
+4. Para colocar várias fotos na mesma casa, selecione todas em **Adicionar fotos**. A ferramenta reduz as imagens automaticamente; a primeira fica como capa. Você pode trocar a capa, remover imagens e adicionar mais.
+5. Clique em **Salvar dados desta casa** e depois em **Baixar catálogo atualizado**.
+6. Envie o `imoveis.json` baixado para a raiz deste repositório, substituindo o arquivo anterior.
+
+O editor local não grava diretamente no GitHub. O site só recebe alterações quando o novo `imoveis.json` é enviado e o GitHub Pages conclui a publicação.
 
 ## Estrutura
 
-- `index.html`: estrutura da página.
+- `index.html`: site público.
 - `styles/style.css`: identidade visual preta e dourada e layout responsivo.
-- `scripts/imoveis-data.js`: **lista de imóveis, preços, fotos e textos que você altera no dia a dia**.
-- `scripts/main.js`: renderização do catálogo, filtros, galeria e links de WhatsApp.
+- `scripts/main.js`: catálogo, filtros, galeria, datas e links para WhatsApp.
+- `imoveis.json`: **arquivo de dados editado pela ferramenta visual**.
 - `assets/images/logo-anubis-original.jpeg`: logotipo enviado.
-- `assets/images/imoveis/casa-teste/`: as três fotos de teste enviadas pelo usuário.
+- `assets/images/imoveis/casa-teste/`: as três fotos de teste recebidas para uma mesma casa.
 
-## Dados de demonstração
+## Anúncios demonstrativos
 
-Este catálogo tem quatro anúncios demonstrativos: a primeira casa usa as três fotos de teste enviadas e o valor de R$ 1.200/mês pedido para testar o layout. As outras três casas são fictícias, com valores de R$ 1.000, R$ 1.450 e R$ 1.700/mês, e fotos ilustrativas do Pexels. Nada disso deve ser apresentado como disponibilidade real. As imagens ilustrativas têm crédito e link para a página da foto.
+O catálogo inicial contém quatro exemplos: R$ 1.200/mês na casa das fotos enviadas e exemplos fictícios de R$ 1.000, R$ 1.450 e R$ 1.700/mês. Os exemplos não são ofertas reais. Substitua-os antes de usar comercialmente.
 
-Os botões de WhatsApp usam o número informado: +55 47 99202-4656.
+Contato comercial: +55 47 99202-4656.
 
-## Publicação
+## GitHub Pages
 
-Abra `Settings → Pages`, selecione a branch `main` e a pasta `/(root)`.
+Em `Settings → Pages`, selecione a branch `main` e a pasta `/(root)`.

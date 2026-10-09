@@ -70,3 +70,22 @@
     height: 52px;
   }
 }
+
+/* Informações adicionais dos imóveis, incluindo datas e descrição. */
+.property-date {
+  margin: -8px 0 14px !important;
+  color: var(--gold-light) !important;
+  font-size: 10px !important;
+}
+.property-description {
+  margin: 12px 0 0 !important;
+  color: #bbb5a9 !important;
+  font-size: 11px !important;
+  line-height: 1.6;
+}
+.property-image img.image-unavailable {
+  opacity: 0;
+}
+.property-thumb.thumb-unavailable {
+  opacity: .45;
+}

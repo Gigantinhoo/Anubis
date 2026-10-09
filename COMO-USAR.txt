@@ -1,0 +1,16 @@
+ANUBIS — FERRAMENTA VISUAL DE CATÁLOGO
+
+1. Extraia todo este ZIP numa pasta do seu computador.
+2. Abra gerenciar-imoveis.html no Chrome ou Edge.
+3. Clique em “Importar arquivo JSON” e selecione o imoveis.json atual baixado do GitHub.
+4. Selecione uma casa. Altere o valor mensal, a localização e as datas.
+5. Em “Fotos desta mesma casa”, use “Adicionar fotos” para selecionar várias imagens de uma vez. Elas entram no mesmo anúncio. Use “Usar como capa” para escolher a foto principal.
+6. Clique em “Salvar dados desta casa”. Repita para outras casas.
+7. Clique em “Baixar catálogo atualizado”. Será baixado um arquivo chamado imoveis.json.
+8. No GitHub, abra o repositório ANUBIS. Na raiz, use Add file → Upload files e envie o novo imoveis.json, substituindo o antigo. Faça Commit changes e aguarde o GitHub Pages publicar.
+
+IMPORTANTE:
+- A ferramenta guarda alterações na sessão do navegador; sempre baixe o JSON antes de fechar a página.
+- As fotos adicionadas são comprimidas e guardadas dentro do JSON, então não é necessário subir cada foto separadamente.
+- Os imóveis existentes são exemplos de teste. Não publique preços ou casas fictícias como anúncios reais.
+- Esta ferramenta não altera o GitHub automaticamente. O envio do arquivo imoveis.json é o passo que atualiza o site público.

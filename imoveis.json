@@ -1,0 +1,96 @@
+[
+  {
+    "id": "casa-teste-anubis",
+    "title": "Casa de teste ANUBIS",
+    "neighborhood": "Corupá, SC · localização a confirmar",
+    "address": "",
+    "bedrooms": null,
+    "bathrooms": null,
+    "area": "",
+    "price": 1200,
+    "dateListed": "",
+    "availableFrom": "",
+    "features": "3 fotos de teste enviadas por você",
+    "description": "Anúncio demonstrativo para testar a apresentação da ANUBIS. As informações ainda precisam ser confirmadas.",
+    "status": "demo",
+    "badge": "FOTOS DE TESTE",
+    "demo": true,
+    "image": "assets/images/imoveis/casa-teste/fachada-teste.jpeg",
+    "gallery": [
+      {"src": "assets/images/imoveis/casa-teste/fachada-teste.jpeg", "alt": "Fachada da casa enviada para demonstração"},
+      {"src": "assets/images/imoveis/casa-teste/area-coberta-teste.jpg", "alt": "Área externa coberta da casa de demonstração"},
+      {"src": "assets/images/imoveis/casa-teste/patio-teste.jpg", "alt": "Pátio e acesso para veículos da casa de demonstração"}
+    ],
+    "photoCredit": "Fotos de teste fornecidas por você",
+    "photoSource": ""
+  },
+  {
+    "id": "casa-demo-02",
+    "title": "Casa demonstrativa 02",
+    "neighborhood": "Localização fictícia · não disponível para locação",
+    "address": "",
+    "bedrooms": 2,
+    "bathrooms": null,
+    "area": "",
+    "price": 1000,
+    "dateListed": "",
+    "availableFrom": "",
+    "features": "2 quartos · dados fictícios",
+    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
+    "status": "demo",
+    "badge": "IMÓVEL FICTÍCIO",
+    "demo": true,
+    "image": "https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000",
+    "gallery": [
+      {"src": "https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000", "alt": "Imagem ilustrativa de uma residência"}
+    ],
+    "photoCredit": "Foto ilustrativa de Max Vakhtbovych / Pexels",
+    "photoSource": "https://www.pexels.com/photo/modern-house-exterior-7587880/"
+  },
+  {
+    "id": "casa-demo-03",
+    "title": "Casa demonstrativa 03",
+    "neighborhood": "Localização fictícia · não disponível para locação",
+    "address": "",
+    "bedrooms": 3,
+    "bathrooms": null,
+    "area": "",
+    "price": 1450,
+    "dateListed": "",
+    "availableFrom": "",
+    "features": "3 quartos · dados fictícios",
+    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
+    "status": "demo",
+    "badge": "IMÓVEL FICTÍCIO",
+    "demo": true,
+    "image": "https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000",
+    "gallery": [
+      {"src": "https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000", "alt": "Imagem ilustrativa de uma residência moderna"}
+    ],
+    "photoCredit": "Foto ilustrativa de alleksana / Pexels",
+    "photoSource": "https://www.pexels.com/photo/modern-house-facade-10610731/"
+  },
+  {
+    "id": "casa-demo-04",
+    "title": "Casa demonstrativa 04",
+    "neighborhood": "Localização fictícia · não disponível para locação",
+    "address": "",
+    "bedrooms": 2,
+    "bathrooms": null,
+    "area": "",
+    "price": 1700,
+    "dateListed": "",
+    "availableFrom": "",
+    "features": "2 quartos · dados fictícios",
+    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
+    "status": "demo",
+    "badge": "IMÓVEL FICTÍCIO",
+    "demo": true,
+    "image": "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000",
+    "gallery": [
+      {"src": "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000", "alt": "Imagem ilustrativa de casa contemporânea"}
+    ],
+    "photoCredit": "Foto ilustrativa de Max Vakhtbovych / Pexels",
+    "photoSource": "https://www.pexels.com/photo/modern-house-exterior-design-8134821/"
+  }
+]
