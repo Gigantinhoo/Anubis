@@ -1,37 +1,37 @@
 [
   {
     "id": "casa-teste-anubis",
-    "title": "Casa de teste ANUBIS",
-    "neighborhood": "Corupá, SC · localização a confirmar",
-    "address": "Rua Ano bom 293",
-    "bedrooms": "2",
-    "bathrooms": "1",
-    "area": "36m2",
-    "price": 1300,
+    "title": "Casa Suzana",
+    "neighborhood": "Corupá, SC · Ano bom",
+    "address": "Rua ano bom",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "area": "75 m2",
+    "price": 1350,
     "dateListed": "",
     "availableFrom": "",
-    "features": "3 fotos de teste enviadas por você",
-    "description": "Anúncio demonstrativo para testar a apresentação da ANUBIS. As informações ainda precisam ser confirmadas.",
-    "status": "available",
-    "badge": "FOTOS DE TESTE",
-    "demo": true,
+    "features": "Residencia super aconchegante",
+    "description": "Casa super aconchegante a menos de 2 minutos do centro. Otima localização",
     "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}. Poderia me passar os detalhes e as condições de locação?",
+    "status": "available",
+    "badge": "Fotos da residencia",
+    "demo": true,
     "image": "assets/images/imoveis/casa-teste/fachada-teste.jpeg",
     "gallery": [
       {
         "src": "assets/images/imoveis/casa-teste/fachada-teste.jpeg",
-        "alt": "Fachada da casa enviada para demonstração"
+        "alt": "Fachada da casa"
       },
       {
         "src": "assets/images/imoveis/casa-teste/area-coberta-teste.jpg",
-        "alt": "Área externa coberta da casa de demonstração"
+        "alt": "Área coberta"
       },
       {
         "src": "assets/images/imoveis/casa-teste/patio-teste.jpg",
-        "alt": "Pátio e acesso para veículos da casa de demonstração"
+        "alt": "Pátio e acesso para veículos"
       }
     ],
-    "photoCredit": "Casa Suzana",
+    "photoCredit": "Fotos de teste fornecidas por você",
     "photoSource": ""
   },
   {
@@ -46,16 +46,15 @@
     "dateListed": "",
     "availableFrom": "",
     "features": "2 quartos · dados fictícios",
-    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
-    "status": "unavailable",
+    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo.",
+    "status": "demo",
     "badge": "IMÓVEL FICTÍCIO",
     "demo": true,
-    "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}.",
     "image": "https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000",
     "gallery": [
       {
         "src": "https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000",
-        "alt": "Imagem ilustrativa de uma residência"
+        "alt": "Imagem ilustrativa de residência"
       }
     ],
     "photoCredit": "Foto ilustrativa de Max Vakhtbovych / Pexels",
@@ -73,16 +72,15 @@
     "dateListed": "",
     "availableFrom": "",
     "features": "3 quartos · dados fictícios",
-    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
-    "status": "unavailable",
+    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo.",
+    "status": "demo",
     "badge": "IMÓVEL FICTÍCIO",
     "demo": true,
-    "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}.",
     "image": "https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000",
     "gallery": [
       {
         "src": "https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000",
-        "alt": "Imagem ilustrativa de uma residência moderna"
+        "alt": "Imagem ilustrativa de residência moderna"
       }
     ],
     "photoCredit": "Foto ilustrativa de alleksana / Pexels",
@@ -100,11 +98,10 @@
     "dateListed": "",
     "availableFrom": "",
     "features": "2 quartos · dados fictícios",
-    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
-    "status": "unavailable",
+    "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo.",
+    "status": "demo",
     "badge": "IMÓVEL FICTÍCIO",
     "demo": true,
-    "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}.",
     "image": "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000",
     "gallery": [
       {
