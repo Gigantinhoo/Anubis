@@ -2,34 +2,33 @@
 
 Site responsivo para locação residencial em Corupá, Santa Catarina.
 
-## Editar imóveis sem programar
+## Disponibilidade e botão do WhatsApp
 
-Use a ferramenta separada `gerenciar-imoveis.html` do pacote **ANUBIS - Ferramenta de Catálogo**. Não é preciso abrir nem alterar código.
+No arquivo `imoveis.json`, cada imóvel tem um campo `status`. Use:
 
-1. Baixe o `imoveis.json` atual no GitHub e abra a ferramenta local no navegador.
-2. Clique em **Importar arquivo JSON** e escolha esse arquivo.
-3. Selecione a casa para alterar preço, localização, datas, quartos e descrição.
-4. Para colocar várias fotos na mesma casa, selecione todas em **Adicionar fotos**. A ferramenta reduz as imagens automaticamente; a primeira fica como capa. Você pode trocar a capa, remover imagens e adicionar mais.
-5. Clique em **Salvar dados desta casa** e depois em **Baixar catálogo atualizado**.
-6. Envie o `imoveis.json` baixado para a raiz deste repositório, substituindo o arquivo anterior.
+- `"available"`: mostra o botão do WhatsApp.
+- `"unavailable"`: oculta o botão.
+- `"soon"`: mostra o anúncio como em breve e oculta o botão.
+- `"rented"`: mostra o anúncio como alugado e oculta o botão.
 
-O editor local não grava diretamente no GitHub. O site só recebe alterações quando o novo `imoveis.json` é enviado e o GitHub Pages conclui a publicação.
+No gerenciador visual, escolha a disponibilidade no menu “Disponibilidade e botão de contato”. Marcar um anúncio como demonstração é independente da disponibilidade.
 
-## Estrutura
+## Mensagem personalizada do WhatsApp
 
-- `index.html`: site público.
-- `styles/style.css`: identidade visual preta e dourada e layout responsivo.
-- `scripts/main.js`: catálogo, filtros, galeria, datas e links para WhatsApp.
-- `imoveis.json`: **arquivo de dados editado pela ferramenta visual**.
-- `assets/images/logo-anubis-original.jpeg`: logotipo enviado.
-- `assets/images/imoveis/casa-teste/`: as três fotos de teste recebidas para uma mesma casa.
+No gerenciador, o campo “Mensagem pronta do WhatsApp” permite configurar uma mensagem diferente para cada imóvel. O campo `whatsappMessage` do `imoveis.json` guarda o texto. Use `{{nome}}` para inserir automaticamente o título do imóvel. Também estão disponíveis `{{localizacao}}`, `{{valor}}`, `{{quartos}}` e `{{banheiros}}`. Se o campo ficar vazio, o site usa a mensagem padrão.
 
-## Anúncios demonstrativos
+Exemplo:
 
-O catálogo inicial contém quatro exemplos: R$ 1.200/mês na casa das fotos enviadas e exemplos fictícios de R$ 1.000, R$ 1.450 e R$ 1.700/mês. Os exemplos não são ofertas reais. Substitua-os antes de usar comercialmente.
+`Olá! Gostaria de saber mais informações sobre {{nome}}. Poderia me passar os detalhes e as condições de locação?`
+
+## Atualização
+
+1. Abra `gerenciar-imoveis.html` ou acesse a ferramenta publicada.
+2. Clique em **Carregar catálogo publicado** ou importe o arquivo `imoveis.json`.
+3. Edite o imóvel, a disponibilidade e a mensagem pronta.
+4. Clique em **Salvar dados desta casa** e depois em **Baixar catálogo atualizado**.
+5. Envie o `imoveis.json` baixado para a raiz deste repositório e faça commit. O GitHub Pages publica a alteração após concluir o deploy.
+
+O catálogo demonstrativo mantém a casa com fotos de teste marcada como disponível para permitir testar o botão. Os outros anúncios de exemplo estão como indisponíveis, pois são fictícios. Revise os dados antes de usar comercialmente.
 
 Contato comercial: +55 47 99202-4656.
-
-## GitHub Pages
-
-Em `Settings → Pages`, selecione a branch `main` e a pasta `/(root)`.

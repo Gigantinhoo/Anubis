@@ -12,14 +12,24 @@
     "availableFrom": "",
     "features": "3 fotos de teste enviadas por você",
     "description": "Anúncio demonstrativo para testar a apresentação da ANUBIS. As informações ainda precisam ser confirmadas.",
-    "status": "demo",
+    "status": "available",
     "badge": "FOTOS DE TESTE",
     "demo": true,
+    "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}. Poderia me passar os detalhes e as condições de locação?",
     "image": "assets/images/imoveis/casa-teste/fachada-teste.jpeg",
     "gallery": [
-      {"src": "assets/images/imoveis/casa-teste/fachada-teste.jpeg", "alt": "Fachada da casa enviada para demonstração"},
-      {"src": "assets/images/imoveis/casa-teste/area-coberta-teste.jpg", "alt": "Área externa coberta da casa de demonstração"},
-      {"src": "assets/images/imoveis/casa-teste/patio-teste.jpg", "alt": "Pátio e acesso para veículos da casa de demonstração"}
+      {
+        "src": "assets/images/imoveis/casa-teste/fachada-teste.jpeg",
+        "alt": "Fachada da casa enviada para demonstração"
+      },
+      {
+        "src": "assets/images/imoveis/casa-teste/area-coberta-teste.jpg",
+        "alt": "Área externa coberta da casa de demonstração"
+      },
+      {
+        "src": "assets/images/imoveis/casa-teste/patio-teste.jpg",
+        "alt": "Pátio e acesso para veículos da casa de demonstração"
+      }
     ],
     "photoCredit": "Casa Suzana",
     "photoSource": ""
@@ -37,12 +47,16 @@
     "availableFrom": "",
     "features": "2 quartos · dados fictícios",
     "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
-    "status": "demo",
+    "status": "unavailable",
     "badge": "IMÓVEL FICTÍCIO",
     "demo": true,
+    "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}.",
     "image": "https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000",
     "gallery": [
-      {"src": "https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000", "alt": "Imagem ilustrativa de uma residência"}
+      {
+        "src": "https://images.pexels.com/photos/7587880/pexels-photo-7587880.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "alt": "Imagem ilustrativa de uma residência"
+      }
     ],
     "photoCredit": "Foto ilustrativa de Max Vakhtbovych / Pexels",
     "photoSource": "https://www.pexels.com/photo/modern-house-exterior-7587880/"
@@ -60,12 +74,16 @@
     "availableFrom": "",
     "features": "3 quartos · dados fictícios",
     "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
-    "status": "demo",
+    "status": "unavailable",
     "badge": "IMÓVEL FICTÍCIO",
     "demo": true,
+    "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}.",
     "image": "https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000",
     "gallery": [
-      {"src": "https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000", "alt": "Imagem ilustrativa de uma residência moderna"}
+      {
+        "src": "https://images.pexels.com/photos/10610731/pexels-photo-10610731.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "alt": "Imagem ilustrativa de uma residência moderna"
+      }
     ],
     "photoCredit": "Foto ilustrativa de alleksana / Pexels",
     "photoSource": "https://www.pexels.com/photo/modern-house-facade-10610731/"
@@ -83,12 +101,16 @@
     "availableFrom": "",
     "features": "2 quartos · dados fictícios",
     "description": "Imóvel e valor fictícios, incluídos somente para testar o catálogo. Não representa uma oferta real.",
-    "status": "demo",
+    "status": "unavailable",
     "badge": "IMÓVEL FICTÍCIO",
     "demo": true,
+    "whatsappMessage": "Olá! Gostaria de saber mais informações sobre {{nome}}.",
     "image": "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000",
     "gallery": [
-      {"src": "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000", "alt": "Imagem ilustrativa de casa contemporânea"}
+      {
+        "src": "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "alt": "Imagem ilustrativa de casa contemporânea"
+      }
     ],
     "photoCredit": "Foto ilustrativa de Max Vakhtbovych / Pexels",
     "photoSource": "https://www.pexels.com/photo/modern-house-exterior-design-8134821/"

@@ -5,8 +5,25 @@ const bedroomSelect = document.querySelector("#bedrooms");
 const noResults = document.querySelector("#no-results");
 let properties = [];
 
-function makeWhatsAppUrl(propertyTitle) {
-  const message = `Olá! Gostaria de informações sobre "${propertyTitle}" da ANUBIS Imóveis em Corupá.`;
+const DEFAULT_WHATSAPP_MESSAGE = "Olá! Gostaria de saber mais informações sobre {{nome}}. Poderia me passar os detalhes e as condições de locação?";
+
+function makeWhatsAppUrl(property) {
+  const title = property.title || "uma casa para alugar";
+  const template = typeof property.whatsappMessage === "string" && property.whatsappMessage.trim()
+    ? property.whatsappMessage.trim()
+    : DEFAULT_WHATSAPP_MESSAGE;
+  const bedroomCount = numericField(property.bedrooms);
+  const bathroomCount = numericField(property.bathrooms);
+  const replacements = {
+    nome: title,
+    localizacao: property.neighborhood || "localização a confirmar",
+    valor: formatMonthlyPrice(property.price),
+    quartos: bedroomCount === null ? "não informado" : String(bedroomCount),
+    banheiros: bathroomCount === null ? "não informado" : String(bathroomCount)
+  };
+  const message = template.replace(/\{\{\s*(nome|localizacao|valor|quartos|banheiros)\s*\}\}/gi, (match, key) => {
+    return replacements[key.toLocaleLowerCase("pt-BR")] ?? match;
+  });
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
@@ -71,7 +88,7 @@ function renderProperties(items) {
 
     const statusText = property.demo
       ? (property.id === "casa-teste-anubis" ? "FOTOS DE TESTE" : "IMÓVEL FICTÍCIO")
-      : ({ available: "DISPONÍVEL", soon: "EM BREVE", rented: "ALUGADO" }[property.status] || "IMÓVEL");
+      : ({ available: "DISPONÍVEL", unavailable: "INDISPONÍVEL", soon: "EM BREVE", rented: "ALUGADO" }[property.status] || "IMÓVEL");
     imageWrap.appendChild(makeTextElement("span", "image-label", property.badge || statusText));
     card.appendChild(imageWrap);
 
@@ -143,11 +160,14 @@ function renderProperties(items) {
       content.appendChild(credit);
     }
 
-    const contact = document.createElement("a");
-    contact.className = "contact-card";
-    contact.href = makeWhatsAppUrl(property.title || "uma casa para alugar");
-    contact.innerHTML = "<span>Consultar pelo WhatsApp</span><span aria-hidden='true'>↗</span>";
-    content.appendChild(contact);
+    // Só mostra contato direto quando a disponibilidade estiver marcada como "available".
+    if (property.status === "available") {
+      const contact = document.createElement("a");
+      contact.className = "contact-card";
+      contact.href = makeWhatsAppUrl(property);
+      contact.innerHTML = "<span>Consultar pelo WhatsApp</span><span aria-hidden='true'>↗</span>";
+      content.appendChild(contact);
+    }
     card.appendChild(content);
     propertyGrid.appendChild(card);
   });
