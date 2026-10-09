@@ -33,6 +33,13 @@ function normalizeGallery(property) {
   return property.image ? [{ src: property.image, alt: `Foto de ${property.title}` }] : [];
 }
 
+function numericField(value) {
+  // Aceita tanto números (2) quanto textos numéricos ("2") vindos do JSON.
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
 function makeTextElement(tagName, className, text) {
   const element = document.createElement(tagName);
   if (className) element.className = className;
@@ -112,8 +119,10 @@ function renderProperties(items) {
     const meta = document.createElement("div");
     meta.className = "property-meta";
     const details = [];
-    if (Number.isFinite(property.bedrooms)) details.push(`${property.bedrooms} quarto${property.bedrooms === 1 ? "" : "s"}`);
-    if (Number.isFinite(property.bathrooms)) details.push(`${property.bathrooms} banheiro${property.bathrooms === 1 ? "" : "s"}`);
+    const bedrooms = numericField(property.bedrooms);
+    if (bedrooms !== null) details.push(`${bedrooms} quarto${bedrooms === 1 ? "" : "s"}`);
+    const bathrooms = numericField(property.bathrooms);
+    if (bathrooms !== null) details.push(`${bathrooms} banheiro${bathrooms === 1 ? "" : "s"}`);
     if (property.area) details.push(property.area);
     if (!details.length) details.push(property.features || "Consulte detalhes");
     meta.appendChild(makeTextElement("span", "property-details", details.join(" · ")));
@@ -151,7 +160,8 @@ function applyFilters(event) {
   const filtered = properties.filter((property) => {
     const searchable = [property.title, property.neighborhood, property.features, property.description, property.price].join(" ").toLocaleLowerCase("pt-BR");
     const textMatches = !term || searchable.includes(term);
-    const bedroomsMatch = !minimumBedrooms || (typeof property.bedrooms === "number" && property.bedrooms >= minimumBedrooms);
+    const bedrooms = numericField(property.bedrooms);
+    const bedroomsMatch = !minimumBedrooms || (bedrooms !== null && bedrooms >= minimumBedrooms);
     return textMatches && bedroomsMatch;
   });
   renderProperties(filtered);
