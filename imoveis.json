@@ -3,11 +3,11 @@
     "id": "casa-teste-anubis",
     "title": "Casa de teste ANUBIS",
     "neighborhood": "Corupá, SC · localização a confirmar",
-    "address": "",
-    "bedrooms": null,
-    "bathrooms": null,
-    "area": "",
-    "price": 1200,
+    "address": "Rua Ano bom 293",
+    "bedrooms": "2",
+    "bathrooms": "1",
+    "area": "36m2",
+    "price": 1300,
     "dateListed": "",
     "availableFrom": "",
     "features": "3 fotos de teste enviadas por você",
@@ -21,7 +21,7 @@
       {"src": "assets/images/imoveis/casa-teste/area-coberta-teste.jpg", "alt": "Área externa coberta da casa de demonstração"},
       {"src": "assets/images/imoveis/casa-teste/patio-teste.jpg", "alt": "Pátio e acesso para veículos da casa de demonstração"}
     ],
-    "photoCredit": "Fotos de teste fornecidas por você",
+    "photoCredit": "Casa Suzana",
     "photoSource": ""
   },
   {
