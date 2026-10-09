@@ -30,7 +30,7 @@
     <section class="intro">
       <div><h1>Gerenciar <em>imóveis.</em></h1><p>Altere preço, endereço e datas, ou adicione várias fotos à mesma casa. Não precisa editar código.</p></div>
     </section>
-    <div class="notice"><strong>Como as alterações vão para o site?</strong> Edite aqui e clique em “Baixar catálogo atualizado”. Depois, envie o arquivo <b>imoveis.json</b> para a raiz do repositório GitHub, substituindo o antigo. O site público não muda até você fazer esse envio.</div>
+    <div class="notice"><strong>Catálogo sincronizado automaticamente.</strong> Ao abrir esta ferramenta, ela carrega a lista atual publicada no site. Depois de editar, clique em “Baixar catálogo atualizado” e envie o arquivo <b>imoveis.json</b> para a raiz do repositório GitHub, substituindo o antigo. O site público só recebe as alterações quando esse arquivo for enviado.</div>
 
     <div class="layout">
       <aside class="sidebar">
@@ -47,7 +47,7 @@
             <div class="form-grid">
               <div class="field full"><label for="title">Nome do anúncio *</label><input id="title" required placeholder="Ex.: Casa com pátio no centro"></div>
               <div class="field"><label for="price">Valor mensal (R$) *</label><input id="price" type="number" min="0" step="50" required placeholder="1200"></div>
-              <div class="field"><label for="status">Disponibilidade e botão de contato</label><select id="status"><option value="available">Disponível — mostrar WhatsApp</option><option value="unavailable">Indisponível — ocultar WhatsApp</option><option value="soon">Em breve — ocultar WhatsApp</option><option value="rented">Alugado — ocultar WhatsApp</option></select><small>O botão de WhatsApp só aparece quando a casa estiver como Disponível.</small></div>
+              <div class="field"><label for="status">Situação</label><select id="status"><option value="demo">Demonstração</option><option value="available">Disponível</option><option value="soon">Em breve</option><option value="rented">Alugado</option></select></div>
               <div class="field full"><label for="neighborhood">Localização que aparece no site *</label><input id="neighborhood" required placeholder="Ex.: Centro, Corupá/SC"></div>
               <div class="field full"><label for="address">Endereço completo (opcional)</label><input id="address" placeholder="Rua e número, se quiser divulgar"></div>
               <div class="field"><label for="dateListed">Data do anúncio</label><input id="dateListed" type="date"></div>
@@ -57,7 +57,6 @@
               <div class="field"><label for="area">Área</label><input id="area" placeholder="Ex.: 80 m²"></div>
               <div class="field"><label for="features">Resumo curto</label><input id="features" placeholder="Ex.: 2 quartos · garagem"></div>
               <div class="field full"><label for="description">Descrição</label><textarea id="description" placeholder="Descreva os ambientes, pátio, garagem e outros detalhes."></textarea></div>
-              <div class="field full"><label for="whatsappMessage">Mensagem pronta do WhatsApp</label><textarea id="whatsappMessage" placeholder="Olá! Gostaria de saber mais sobre {{nome}}."></textarea><small>Personalize esta mensagem para esta casa. Campos automáticos: {{nome}}, {{localizacao}}, {{valor}}, {{quartos}} e {{banheiros}}.</small></div>
               <div class="field full"><label for="badge">Etiqueta na foto</label><input id="badge" placeholder="Ex.: DISPONÍVEL ou FOTOS DE TESTE"><label class="checkline"><input id="demo" type="checkbox"> Este anúncio é apenas demonstração / não publicar como oferta real</label></div>
             </div>
 
@@ -93,7 +92,7 @@
     let galleryDraft = [];
     let creating = false;
     const $ = (id) => document.getElementById(id);
-    const fields = ["title","price","status","neighborhood","address","dateListed","availableFrom","bedrooms","bathrooms","area","features","description","whatsappMessage","badge"];
+    const fields = ["title","price","status","neighborhood","address","dateListed","availableFrom","bedrooms","bathrooms","area","features","description","badge"];
 
     function clone(value){return JSON.parse(JSON.stringify(value));}
     function priceText(value){return typeof value === "number" ? value.toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0})+"/mês" : "Valor a informar";}
@@ -107,24 +106,13 @@
       properties.forEach(property=>{
         const button=document.createElement("button");button.type="button";button.className="property-choice"+(property.id===selectedId&&!creating?" active":"");
         const title=document.createElement("strong");title.textContent=property.title||"Novo imóvel sem nome";
-        const details=document.createElement("span");const stateLabel=({available:"WhatsApp visível",unavailable:"WhatsApp oculto",soon:"Em breve",rented:"Alugado",demo:"Demonstração"})[normalizedStatus(property)];details.textContent=priceText(property.price)+" · "+(property.neighborhood||"Localização a informar")+" · "+stateLabel;
+        const details=document.createElement("span");details.textContent=priceText(property.price)+" · "+(property.neighborhood||"Localização a informar");
         button.append(title,details);button.addEventListener("click",()=>selectProperty(property.id));list.appendChild(button);
       });
     }
     function setMessage(message,isError=false){$("status-message").textContent=message;$("status-message").style.color=isError?"var(--danger)":"var(--green)";}
-    const DEFAULT_WHATSAPP_MESSAGE = "Olá! Gostaria de saber mais informações sobre {{nome}}. Poderia me passar os detalhes e as condições de locação?";
-    function normalizedStatus(property){
-      const valid = ["available","unavailable","soon","rented"];
-      if(valid.includes(property.status)) return property.status;
-      // Compatibilidade com imóveis antigos que usavam status="demo".
-      return property.id === "casa-teste-anubis" ? "available" : (property.demo ? "unavailable" : "available");
-    }
     function loadForm(property){
-      fields.forEach(field=>{
-        if(field === "status") $(field).value=normalizedStatus(property);
-        else if(field === "whatsappMessage") $(field).value=property.whatsappMessage || DEFAULT_WHATSAPP_MESSAGE;
-        else $(field).value=property[field]??"";
-      });
+      fields.forEach(field=>$(field).value=property[field]??"");
       $("demo").checked=!!property.demo;
       galleryDraft=clone(safeGallery(property));
       $("form-heading").textContent=creating?"NOVA CASA":"EDITAR IMÓVEL";
@@ -160,8 +148,7 @@
         availableFrom:$("availableFrom").value,
         features:$("features").value.trim(),
         description:$("description").value.trim(),
-        whatsappMessage:$("whatsappMessage").value.trim(),
-        status:$("status").value,
+        status:$("demo").checked?"demo":$("status").value,
         badge:$("badge").value.trim(),
         demo:$("demo").checked,
         image:galleryDraft[0]?.src||"",
@@ -179,9 +166,17 @@
       }
       renderList();loadForm(properties.find(p=>p.id===selectedId));setMessage("Casa salva nesta sessão. Baixe o catálogo atualizado para guardar o arquivo.");
     });
+    $("demo").addEventListener("change", () => {
+      if ($("demo").checked) $("status").value = "demo";
+      else if ($("status").value === "demo") $("status").value = "available";
+    });
+    $("status").addEventListener("change", () => {
+      if ($("status").value === "demo") $("demo").checked = true;
+      else $("demo").checked = false;
+    });
     $("new-property").addEventListener("click",()=>{
       creating=true;selectedId=null;galleryDraft=[];
-      const draft={title:"",price:0,status:"available",neighborhood:"",address:"",dateListed:new Date().toISOString().slice(0,10),availableFrom:"",bedrooms:null,bathrooms:null,area:"",features:"",description:"",whatsappMessage:DEFAULT_WHATSAPP_MESSAGE,badge:"DISPONÍVEL",demo:false,gallery:[],image:""};
+      const draft={title:"",price:0,status:"available",neighborhood:"",address:"",dateListed:new Date().toISOString().slice(0,10),availableFrom:"",bedrooms:null,bathrooms:null,area:"",features:"",description:"",badge:"DISPONÍVEL",demo:false,gallery:[],image:""};
       loadForm(draft);renderList();$("title").focus();
     });
     $("delete-property").addEventListener("click",()=>{
@@ -249,6 +244,8 @@
     });
 
     renderList();selectProperty(selectedId);
+    // Importante: abre já com a versão publicada; não deixa a lista fictícia de demonstração como padrão.
+    $("load-online").click();
   </script>
 </body>
 </html>
