@@ -32,7 +32,7 @@
     async function decryptVault(vault,password){
       if(!vault||vault.version!==1||vault.algorithm!=='AES-256-GCM'||vault.kdf!=='PBKDF2-SHA-256')throw new Error('Arquivo de catálogo protegido inválido.');
       try{const key=await deriveKey(password,b64bytes(vault.salt),Number(vault.iterations)||PBKDF2_ITERATIONS);const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64bytes(vault.iv)},key,b64bytes(vault.ciphertext));const data=JSON.parse(new TextDecoder().decode(plain));if(!Array.isArray(data))throw new Error('Formato inválido');return data;}
-      catch(error){catalogPassword='';throw new Error('Senha incorreta ou catálogo protegido inválido.');}
+      catch(error){throw new Error('Senha incorreta ou catálogo protegido inválido.');}
     }
     async function loadCatalog(){
       cards.innerHTML='<p class="empty">Carregando catálogo protegido…</p>';

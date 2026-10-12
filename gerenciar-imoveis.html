@@ -17,7 +17,7 @@
       <div class="actions"><button class="btn" id="sync" type="button">Sincronizar catálogo</button><button class="btn" id="admin-link" type="button">Abrir painel de links</button><button class="btn gold" id="publish" type="button">Publicar páginas</button></div>
     </header>
     <section class="intro"><div><h1>Gerenciar <em>imóveis.</em></h1><p>Edite uma casa, adicione fotos ou crie um novo imóvel. Ao publicar, o sistema gera uma página HTML individual para cada cadastro e atualiza o painel de links.</p></div></section>
-    <div class="notice"><strong>Como funciona:</strong> a homepage não mostra imóveis. Cada anúncio é publicado em uma página própria; o painel <code>admin.html</code> reúne os links para compartilhar. Para publicar, use um token Fine-grained do GitHub com acesso somente ao repositório <b>Anubis</b> e permissão <b>Contents: Read and write</b>. O token e a senha ficam apenas na memória desta aba. A senha também é necessária no painel da sua mãe. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Criar token</a>.<br><br><strong>Primeira publicação obrigatória:</strong> o arquivo antigo <code>imoveis.json</code> ainda contém o catálogo anterior. Sincronize e publique uma vez para migrar os dados, gerar as páginas individuais e remover esse arquivo da versão atual do site. Se não concluir esta etapa, o catálogo antigo continua acessível por seu URL direto.<br><br><strong>Privacidade:</strong> o catálogo do painel fica criptografado e fora da homepage, mas as páginas individuais são públicas para quem tiver seus links. Como o repositório é público, páginas e histórico antigo ainda podem ser inspecionados no GitHub; isso não é autenticação completa.</div>
+    <div class="notice"><strong>Como funciona:</strong> a homepage não mostra imóveis. Cada anúncio é publicado em uma página própria; o painel <code>admin.html</code> reúne os links para compartilhar. Para publicar, use um token Fine-grained do GitHub com acesso somente ao repositório <b>Anubis</b> e permissão <b>Contents: Read and write</b>. O token e a senha ficam apenas na memória desta aba. A senha também é necessária no painel da sua mãe. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Criar token</a>.<br><br><strong>Privacidade:</strong> o catálogo de administração fica fora da homepage, mas, em hospedagem estática e repositório público, páginas e arquivos não são protegidos por senha. Esta organização impede a listagem casual no site, não é um controle de acesso.</div>
     <div class="layout">
       <aside class="sidebar"><div class="sidebar-head"><strong>IMÓVEIS CADASTRADOS</strong><span class="count" id="count">0</span></div><div class="list" id="property-list"></div><div style="padding:10px"><button class="btn gold" id="new" type="button" style="width:100%">+ Adicionar imóvel</button></div><div class="help">Selecione um imóvel para editar. Ao publicar, o gerenciador atualiza a página individual e o painel de links.</div></aside>
       <main class="editor"><div class="editor-head"><strong id="form-heading">EDITAR IMÓVEL</strong><span class="count" id="edit-mode">Cadastro</span></div><div class="editor-body">
@@ -43,7 +43,7 @@
         </form>
       </div></main>
     </div>
-    <div class="hint-box"><b>Importante:</b> cada publicação gera ou atualiza um HTML individual em <code>imoveis/</code> e salva a lista administrativa criptografada em <code>admin/catalogo.enc.json</code>. A homepage não mostra cards de imóveis.</div>
+    <div class="hint-box"><b>Importante:</b> cada publicação gera ou atualiza <code>imoveis/identificador.html</code> e atualiza <code>admin/catalogo.json</code>. A homepage não faz fetch do catálogo e não mostra cards de imóveis.</div>
   </div>
 <script>
 (() => {
@@ -55,12 +55,15 @@
   const $=id=>document.getElementById(id);
   const labels={available:'Disponível',unavailable:'Indisponível',soon:'Em breve',rented:'Alugado',draft:'Rascunho'};
   const fields=['title','price','neighborhood','address','bedrooms','bathrooms','area','status','badge','features','description','whatsappMessage'];
-  let properties=[]; let baseline=[]; let selectedId=null; let creating=false; let galleryDraft=[]; let githubToken=''; let catalogPassphrase=''; let catalogLoaded=false;
+  let properties=[]; let baseline=[]; let selectedId=null; let creating=false; let galleryDraft=[]; let githubToken=''; let catalogPassphrase='';
   const DEFAULT_MESSAGE='Olá! Gostaria de saber mais informações sobre {{nome}}. Poderia me passar os detalhes e as condições de locação?';
+  const starter=[
+    {id:'casa-suzana',slug:'casa-suzana',title:'Casa Suzana',neighborhood:'Corupá, SC · Ano Bom',address:'',bedrooms:2,bathrooms:2,area:'75 m²',price:1350,features:'Residência aconchegante',description:'Casa super aconchegante a menos de 2 minutos do centro. Ótima localização.',whatsappMessage:DEFAULT_MESSAGE,status:'rented',badge:'ALUGADO',demo:false,image:'assets/images/imoveis/casa-teste/fachada-teste.jpeg',gallery:[{src:'assets/images/imoveis/casa-teste/fachada-teste.jpeg',alt:'Fachada da Casa Suzana'},{src:'assets/images/imoveis/casa-teste/area-coberta-teste.jpg',alt:'Área coberta da Casa Suzana'},{src:'assets/images/imoveis/casa-teste/patio-teste.jpg',alt:'Pátio e acesso para veículos'}]},
+    {id:'apartamento-aguia',slug:'apartamento-aguia',title:'Apartamento Águia',neighborhood:'',address:'',bedrooms:null,bathrooms:null,area:'',price:null,features:'Apartamento para locação',description:'Informações do imóvel em atualização.',whatsappMessage:'Olá! Gostaria de saber mais informações sobre {{nome}}.',status:'draft',badge:'EM PREPARAÇÃO',demo:false,image:'assets/images/imoveis/apartamento1/sala.jpg',gallery:['sala.jpg','sala2.jpg','sala-de-jantar.jpg','cozinha.jpg','cozinha2.jpg','quarto.jpg','banheiro.jpg','lavanderia.jpg','corredor.jpg','externo1.jpg','externo2.jpg'].map((name,index)=>({src:'assets/images/imoveis/apartamento1/'+name,alt:['Sala','Sala, outro ângulo','Sala de jantar','Cozinha','Cozinha, outro ângulo','Quarto','Banheiro','Lavanderia','Corredor','Área externa','Outra vista externa'][index]+' do Apartamento Águia'}))}
+  ];
   const clone=value=>JSON.parse(JSON.stringify(value));
   function esc(value){return String(value??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
   function slugify(value){return String(value||'imovel').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'imovel';}
-  function randomSlug(){const bytes=new Uint8Array(8);crypto.getRandomValues(bytes);return 'imovel-'+Array.from(bytes,byte=>byte.toString(16).padStart(2,'0')).join('');}
   function priceText(value){return typeof value==='number'&&Number.isFinite(value)?new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(value)+'/mês':'Valor a confirmar';}
   function safeGallery(p){if(Array.isArray(p.gallery)&&p.gallery.length)return p.gallery.map(photo=>typeof photo==='string'?{src:photo,alt:'Foto de '+p.title}:photo).filter(photo=>photo&&photo.src);return p.image?[{src:p.image,alt:'Foto de '+p.title}]:[];}
   function statusFor(p){return labels[p.status]||'Cadastro';}
@@ -72,7 +75,7 @@
   function loadForm(p){fields.forEach(field=>$(field).value=p[field]??'');$('slug').value=p.slug||'';galleryDraft=clone(safeGallery(p));$('form-heading').textContent=creating?'NOVO IMÓVEL':'EDITAR IMÓVEL';$('edit-mode').textContent=p.status==='draft'?'Rascunho':'Cadastro';renderGallery();setMessage('');}
   function selectProperty(id){const p=properties.find(item=>item.id===id);if(!p)return;selectedId=id;creating=false;loadForm(p);renderList();}
   function renderGallery(){const gallery=$('gallery');gallery.innerHTML='';$('empty-gallery').classList.toggle('hidden',galleryDraft.length>0);galleryDraft.forEach((photo,index)=>{const card=document.createElement('div');card.className='photo';const img=document.createElement('img');img.src=String(photo.src).startsWith('assets/')?photo.src:photo.src;img.alt=photo.alt||'Foto '+(index+1);img.onerror=()=>{img.style.opacity='.25';};const label=document.createElement('p');label.textContent=index===0?'★ Capa principal':'Foto '+(index+1);const actions=document.createElement('div');actions.className='photo-actions';const remove=document.createElement('button');remove.type='button';remove.className='remove';remove.textContent='Remover foto';remove.addEventListener('click',()=>{galleryDraft.splice(index,1);renderGallery();setMessage('Foto removida do rascunho. Salve o cadastro.');});actions.append(remove);card.append(img,label,actions);gallery.append(card);});}
-  function readForm(){const old=creating?null:properties.find(p=>p.id===selectedId);const title=$('title').value.trim();let slug=old?.slug||randomSlug();while(!old&&properties.some(item=>item.slug===slug))slug=randomSlug();return {id:old?.id||slug,slug,title,neighborhood:$('neighborhood').value.trim(),address:$('address').value.trim(),photoCredit:old?.photoCredit||'',photoSource:old?.photoSource||'',bedrooms:$('bedrooms').value===''?null:Number($('bedrooms').value),bathrooms:$('bathrooms').value===''?null:Number($('bathrooms').value),area:$('area').value.trim(),price:$('price').value===''?null:Number($('price').value),dateListed:old?.dateListed||'',availableFrom:old?.availableFrom||'',features:$('features').value.trim(),description:$('description').value.trim(),whatsappMessage:$('whatsappMessage').value.trim()||DEFAULT_MESSAGE,status:$('status').value,badge:$('badge').value.trim(),demo:false,image:galleryDraft[0]?.src||'',gallery:clone(galleryDraft)};}
+  function readForm(){const old=creating?null:properties.find(p=>p.id===selectedId);const title=$('title').value.trim();const slug=old?.slug||slugify(title);return {id:old?.id||slug+'-'+Date.now().toString(36),slug,title,neighborhood:$('neighborhood').value.trim(),address:$('address').value.trim(),bedrooms:$('bedrooms').value===''?null:Number($('bedrooms').value),bathrooms:$('bathrooms').value===''?null:Number($('bathrooms').value),area:$('area').value.trim(),price:$('price').value===''?null:Number($('price').value),dateListed:old?.dateListed||'',availableFrom:old?.availableFrom||'',features:$('features').value.trim(),description:$('description').value.trim(),whatsappMessage:$('whatsappMessage').value.trim()||DEFAULT_MESSAGE,status:$('status').value,badge:$('badge').value.trim(),demo:false,image:galleryDraft[0]?.src||'',gallery:clone(galleryDraft)};}
   function saveCurrentProperty(){const form=$('form');if(!form.reportValidity())return false;const p=readForm();if(!p.title){setMessage('Informe o nome do imóvel.',true);return false;}if(p.price!==null&&(!Number.isFinite(p.price)||p.price<0)){setMessage('Informe um valor válido.',true);return false;}if(creating){properties.push(p);selectedId=p.id;creating=false;}else{const index=properties.findIndex(item=>item.id===selectedId);if(index<0){setMessage('Não encontrei este imóvel. Sincronize o catálogo.',true);return false;}properties[index]=p;}renderList();selectProperty(selectedId);setMessage('Cadastro salvo nesta sessão. Clique em “Publicar páginas” para publicar no site.');return true;}
   async function compressImage(file){if(!file.type.startsWith('image/'))throw new Error(file.name+' não é uma imagem.');const url=URL.createObjectURL(file);try{const image=new Image();image.src=url;await image.decode();const max=1800,scale=Math.min(1,max/Math.max(image.naturalWidth,image.naturalHeight));const canvas=document.createElement('canvas');canvas.width=Math.round(image.naturalWidth*scale);canvas.height=Math.round(image.naturalHeight*scale);canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);return {src:canvas.toDataURL('image/jpeg',.8),alt:file.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ')};}finally{URL.revokeObjectURL(url);}}
   $('form').addEventListener('submit',event=>{event.preventDefault();saveCurrentProperty();});
@@ -80,7 +83,7 @@
   $('delete').addEventListener('click',()=>{if(creating){creating=false;selectProperty(properties[0]?.id);return;}const p=properties.find(item=>item.id===selectedId);if(!p)return;if(!confirm('Remover “'+p.title+'” do catálogo e apagar sua página individual na próxima publicação?'))return;properties=properties.filter(item=>item.id!==selectedId);selectedId=properties[0]?.id||null;if(selectedId)selectProperty(selectedId);else{creating=true;loadForm({title:'',slug:'',status:'draft',gallery:[]});}renderList();setMessage('Imóvel removido localmente. Publique para removê-lo do site.');});
   $('discard').addEventListener('click',()=>{if(creating){creating=false;selectProperty(properties[0]?.id);return;}const p=properties.find(item=>item.id===selectedId);if(p)loadForm(p);});
   $('photo-files').addEventListener('change',async event=>{const files=Array.from(event.target.files||[]);if(!files.length)return;setMessage('Reduzindo fotos…');for(const file of files){try{galleryDraft.push(await compressImage(file));}catch(error){setMessage('Não consegui processar '+file.name+'. Use uma imagem JPG, PNG ou WebP.',true);}}renderGallery();setMessage(files.length+' foto(s) adicionada(s). Salve e publique o cadastro.');event.target.value='';});
-  $('title').addEventListener('input',()=>{if(creating)$('slug').value=$('title').value.trim()?'Gerado ao salvar':'(será gerado ao salvar)';});
+  $('title').addEventListener('input',()=>{if(creating)$('slug').value=slugify($('title').value)||'(será gerado ao salvar)';});
   function apiHeaders(auth=true){const headers={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};if(auth&&githubToken)headers.Authorization='Bearer '+githubToken;return headers;}
   function encodeUtf8Base64(value){const bytes=new TextEncoder().encode(value);let binary='';for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(binary);}
   function decodeBase64(value){const binary=atob(String(value||'').replace(/\s/g,''));const bytes=Uint8Array.from(binary,ch=>ch.charCodeAt(0));return new TextDecoder('utf-8').decode(bytes);}
@@ -100,7 +103,7 @@
   async function decryptCatalog(vault,password){
     if(!vault||vault.version!==1||vault.algorithm!=='AES-256-GCM'||vault.kdf!=='PBKDF2-SHA-256')throw new Error('Formato do catálogo protegido desconhecido.');
     try{const key=await deriveCatalogKey(password,base64ToBytes(vault.salt),Number(vault.iterations)||PBKDF2_ITERATIONS);const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:base64ToBytes(vault.iv)},key,base64ToBytes(vault.ciphertext));const parsed=JSON.parse(new TextDecoder().decode(plain));if(!Array.isArray(parsed))throw new Error('Formato de catálogo inválido.');return parsed;}
-    catch(error){catalogPassphrase='';throw new Error('Senha incorreta ou catálogo protegido inválido. Verifique a senha e tente novamente.');}
+    catch(error){if(error instanceof SyntaxError)throw error;throw new Error('Senha incorreta ou catálogo protegido inválido. Verifique a senha e tente novamente.');}
   }
   async function askCatalogPassphrase(){
     if(catalogPassphrase)return catalogPassphrase;
@@ -117,32 +120,13 @@
     try{
       setMessage('Sincronizando catálogo protegido…');
       const response=await fetch(VAULT_PATH+'?v='+Date.now(),{cache:'no-store'});
-      if(response.status===404){
-        // Primeira inicialização: importa o catálogo real anterior para não perder os imóveis nem as fotos.
-        const legacyResponse=await fetch('imoveis.json?v='+Date.now(),{cache:'no-store'});
-        if(legacyResponse.ok){
-          const legacy=await legacyResponse.json();
-          if(Array.isArray(legacy)&&legacy.length){
-            const used=new Set();
-            properties=legacy.map((item,index)=>{
-              const base=item.slug||randomSlug();let slug=base;let suffix=2;
-              while(used.has(slug))slug=base+'-'+suffix++;
-              used.add(slug);
-              return {...item,id:item.id||slug,slug,address:item.address||''};
-            });
-            baseline=[];catalogLoaded=true;selectedId=properties[0]?.id||null;creating=false;renderList();if(selectedId)selectProperty(selectedId);
-            setMessage('Catálogo antigo recuperado: '+properties.length+' imóveis. Confira os anúncios e clique em “Publicar páginas” para migrar fotos e criar os HTML.');return true;
-          }
-        }
-        properties=[];baseline=[];catalogLoaded=false;selectedId=null;creating=true;galleryDraft=[];renderList();loadForm({title:'',slug:'',price:'',neighborhood:'',address:'',bedrooms:null,bathrooms:null,area:'',status:'draft',badge:'EM PREPARAÇÃO',features:'',description:'',whatsappMessage:DEFAULT_MESSAGE,gallery:[]});
-        setMessage('Não encontrei o catálogo antigo. Não publique ainda: confira se imoveis.json existe no site e clique em “Sincronizar catálogo” novamente.',true);return false;
-      }
+      if(response.status===404){properties=clone(starter);baseline=[];selectedId=properties[0]?.id||null;creating=false;renderList();if(selectedId)selectProperty(selectedId);setMessage('O catálogo protegido ainda não foi publicado. Confira os dados iniciais e clique em “Publicar páginas” para criar o catálogo.');return false;}
       if(!response.ok)throw new Error('HTTP '+response.status);
       const vault=await response.json();const password=await askCatalogPassphrase();if(!password)throw new Error('Digite a senha do catálogo para continuar.');
-      const loaded=await decryptCatalog(vault,password);catalogPassphrase=password;properties=loaded.map(p=>({...p,address:p.address||''}));baseline=clone(properties);catalogLoaded=true;selectedId=properties[0]?.id||null;creating=false;renderList();if(selectedId)selectProperty(selectedId);else{creating=true;loadForm({title:'',slug:'',price:'',neighborhood:'',address:'',bedrooms:null,bathrooms:null,area:'',status:'draft',gallery:[]});}
+      const loaded=await decryptCatalog(vault,password);catalogPassphrase=password;properties=loaded.map(p=>({...p,address:p.address||''}));baseline=clone(properties);selectedId=properties[0]?.id||null;creating=false;renderList();if(selectedId)selectProperty(selectedId);else{creating=true;loadForm({title:'',slug:'',price:'',neighborhood:'',address:'',bedrooms:null,bathrooms:null,area:'',status:'draft',gallery:[]});}
       setMessage('Catálogo protegido sincronizado. '+properties.length+' imóvel(is) encontrado(s).');return true;
     }catch(error){
-      if(!properties.length){properties=[];baseline=[];catalogLoaded=false;selectedId=null;creating=true;renderList();loadForm({title:'',slug:'',price:'',neighborhood:'',address:'',bedrooms:null,bathrooms:null,area:'',status:'draft',badge:'EM PREPARAÇÃO',features:'',description:'',whatsappMessage:DEFAULT_MESSAGE,gallery:[]});}
+      if(!properties.length){properties=clone(starter);baseline=[];selectedId=properties[0]?.id||null;renderList();if(selectedId)selectProperty(selectedId);}
       setMessage((error.message||'Não consegui carregar o catálogo protegido.')+(silent?'':' Confira a senha e a conexão.'),true);return false;
     }
   }
@@ -151,12 +135,22 @@
     const allowed=['id','slug','title','neighborhood','bedrooms','bathrooms','area','price','dateListed','availableFrom','features','description','whatsappMessage','status','badge','demo','image','gallery','photoCredit','photoSource'];
     const result={};for(const key of allowed)if(Object.prototype.hasOwnProperty.call(p,key))result[key]=p[key];return result;
   }
-  function makePropertyHtml(p){const pub=publicProperty(p);const json=JSON.stringify(pub).replace(/</g,'\\u003c').replace(/&/g,'\\u0026').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');return `<!doctype html>\n<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="theme-color" content="#0b0b0a"><title>${esc(pub.title)} | ANUBIS Imóveis</title><meta name="description" content="Detalhes e fotos de ${esc(pub.title)} para locação com a ANUBIS em Corupá/SC."><link rel="icon" href="../assets/images/logo-anubis-original.jpeg" type="image/jpeg"><link rel="stylesheet" href="../styles/property.css"><script src="../scripts/property-page.js" defer><\/script></head><body><header class="site-header"><a class="brand" href="../index.html"><img src="../assets/images/logo-anubis-original.jpeg" alt="Logotipo ANUBIS" class="brand-logo"><span class="brand-text"><strong>ANUBIS</strong><small>IMÓVEIS · CORUPÁ/SC</small></span></a><a class="back-link" href="../index.html">Homepage ANUBIS ↗</a></header><main class="wrap" id="property-view"><p class="status-note">Carregando imóvel…</p></main><footer class="site-footer"><a class="footer-brand" href="../index.html">ANUBIS<span> IMÓVEIS</span></a><p>Locação residencial · Corupá, Santa Catarina</p><a href="https://wa.me/5547992024656" target="_blank" rel="noopener">Contato ↗</a><small>© <span id="year"></span> ANUBIS Imóveis</small></footer><script id="property-data" type="application/json">${json}<\/script></body></html>`;}
+  function pageAssetPath(value){
+    const src=String(value||'');
+    if(!src||/^(?:https?:|data:|blob:|\/|#)/i.test(src))return src;
+    return '../'+src.replace(/^\.\//,'');
+  }
+  function makePropertyHtml(p){
+    const pub=publicProperty(p);
+    // Os anúncios ficam dentro de /imoveis/, portanto caminhos locais precisam subir um nível.
+    if(pub.image)pub.image=pageAssetPath(pub.image);
+    if(Array.isArray(pub.gallery))pub.gallery=pub.gallery.map(photo=>typeof photo==='string'?pageAssetPath(photo):({...photo,src:pageAssetPath(photo.src)}));
+    const json=JSON.stringify(pub).replace(/</g,'\\u003c').replace(/&/g,'\\u0026').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+    return `<!doctype html>\n<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="theme-color" content="#0b0b0a"><title>${esc(pub.title)} | ANUBIS Imóveis</title><meta name="description" content="Detalhes e fotos de ${esc(pub.title)} para locação com a ANUBIS em Corupá/SC."><link rel="icon" href="../assets/images/logo-anubis-original.jpeg" type="image/jpeg"><link rel="stylesheet" href="../styles/property.css"><script src="../scripts/property-page.js" defer><\/script></head><body><header class="site-header"><a class="brand" href="../index.html"><img src="../assets/images/logo-anubis-original.jpeg" alt="Logotipo ANUBIS" class="brand-logo"><span class="brand-text"><strong>ANUBIS</strong><small>IMÓVEIS · CORUPÁ/SC</small></span></a><a class="back-link" href="../index.html">Homepage ANUBIS ↗</a></header><main class="wrap" id="property-view"><p class="status-note">Carregando imóvel…</p></main><footer class="site-footer"><a class="footer-brand" href="../index.html">ANUBIS<span> IMÓVEIS</span></a><p>Locação residencial · Corupá, Santa Catarina</p><a href="https://wa.me/5547992024656" target="_blank" rel="noopener">Contato ↗</a><small>© <span id="year"></span> ANUBIS Imóveis</small></footer><script id="property-data" type="application/json">${json}<\/script></body></html>`;
+  }
   function ensurePublicPaths(p){const slug=p.slug||slugify(p.title);p.slug=slug;const safePhotos=[];const photos=safeGallery(p);for(let index=0;index<photos.length;index++){const photo=photos[index];if(String(photo.src).startsWith('data:image/')){const ext='jpg';const path='assets/images/imoveis/'+slug+'/'+slug+'-foto-'+String(index+1).padStart(2,'0')+'.'+ext;const payload=photo.src.split(',')[1];safePhotos.push({photo,path,payload});}else safePhotos.push({photo,path:photo.src,payload:null});}return safePhotos;}
   async function publishCatalog(){
-    if(!catalogLoaded){setMessage('O catálogo não foi sincronizado. Não vou publicar para evitar apagar seus imóveis. Clique em “Sincronizar catálogo” e confira o status.',true);return;}
-    const emptyLastDeletion=creating&&properties.length===0&&!$('title').value.trim();
-    if(!emptyLastDeletion&&!saveCurrentProperty())return;
+    if(!saveCurrentProperty())return;
     if(!githubToken){const entered=prompt('Cole seu token Fine-grained do GitHub com acesso somente ao repositório Gigantinhoo/Anubis e permissão Contents: Read and write. O token não será salvo.');if(!entered)return;githubToken=entered.trim();}
     if(!catalogPassphrase){const password=await askCatalogPassphrase();if(!password)return;}
     const button=$('publish');button.disabled=true;
@@ -169,16 +163,15 @@
         catch(error){throw new Error(error.message||'Não consegui desbloquear o catálogo publicado.');}
         if(JSON.stringify(remoteProperties)!==JSON.stringify(baseline))throw new Error('O catálogo do GitHub mudou desde a última sincronização. Clique em “Sincronizar catálogo” e tente novamente para não sobrescrever alterações recentes.');
       }else if(baseline.length){throw new Error('O catálogo remoto não foi encontrado, mas esta sessão tem uma versão carregada. Sincronize novamente antes de publicar.');}
-      const totalNewPhotos=properties.reduce((sum,p)=>sum+safeGallery(p).filter(photo=>String(photo.src||'').startsWith('data:image/')).length,0);let uploadedPhotos=0;
-      setMessage(totalNewPhotos?'Enviando fotos (0/'+totalNewPhotos+')…':'Sem fotos novas para enviar.');
-      for(const p of properties){const prepared=ensurePublicPaths(p);const rebuilt=[];for(const entry of prepared){if(entry.payload){await putFile(entry.path,entry.payload,'Adiciona foto do imóvel '+p.title,true);uploadedPhotos++;setMessage('Enviando fotos ('+uploadedPhotos+'/'+totalNewPhotos+')…');rebuilt.push({...entry.photo,src:entry.path});}else rebuilt.push({...entry.photo,src:entry.path});}p.gallery=rebuilt;p.image=rebuilt[0]?.src||'';}
+      setMessage('Enviando as novas fotos…');
+      for(const p of properties){const prepared=ensurePublicPaths(p);const rebuilt=[];for(const entry of prepared){if(entry.payload){await putFile(entry.path,entry.payload,'Adiciona foto do imóvel '+p.title,true);rebuilt.push({...entry.photo,src:entry.path});}else rebuilt.push({...entry.photo,src:entry.path});}p.gallery=rebuilt;p.image=rebuilt[0]?.src||'';}
       setMessage('Gerando uma página HTML para cada imóvel…');
       for(const p of properties){if(!p.title||!p.slug)throw new Error('Todo imóvel precisa de nome e identificador.');await putFile('imoveis/'+p.slug+'.html',makePropertyHtml(p),'Gera/atualiza página individual: '+p.title);}
       const currentSlugs=new Set(properties.map(p=>p.slug));for(const old of baseline){if(old.slug&&!currentSlugs.has(old.slug))await deleteFile('imoveis/'+old.slug+'.html');}
       setMessage('Protegendo o catálogo administrativo…');const vault=await encryptCatalog(properties,catalogPassphrase);await putFile(VAULT_PATH,JSON.stringify(vault,null,2)+'\n','Atualiza catálogo privado criptografado da ANUBIS');
       // Limpa formatos antigos em texto aberto que poderiam listar os imóveis.
       await deleteFile('admin/catalogo.json');await deleteFile('imoveis.json');
-      baseline=clone(properties);catalogLoaded=true;renderList();if(selectedId)selectProperty(selectedId);setMessage('Publicado! Cada imóvel tem seu próprio HTML, a homepage não lista os anúncios e o painel usa um catálogo criptografado. Guarde a senha para abrir o painel de links. A atualização pode levar alguns minutos.');
+      baseline=clone(properties);renderList();if(selectedId)selectProperty(selectedId);setMessage('Publicado! Cada imóvel tem seu próprio HTML, a homepage não lista os anúncios e o painel usa um catálogo criptografado. Guarde a senha para abrir o painel de links. A atualização pode levar alguns minutos.');
     }catch(error){setMessage(error.message||'Falha ao publicar. Confira a conexão, a senha e as permissões do token.',true);if(String(error.message).includes('401')||String(error.message).includes('Bad credentials'))githubToken='';}
     finally{button.disabled=false;}
   }
