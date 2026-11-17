@@ -32,7 +32,8 @@
     ],
     "photoCredit": "Fotos de teste fornecidas por você",
     "photoSource": "",
-    "slug": "casa-osiris"
+    "slug": "casa-osiris",
+    "pagePath": "imovel.html?slug=casa-osiris"
   },
   {
     "id": "casa-1791557407551",
@@ -42,7 +43,7 @@
     "bedrooms": 1,
     "bathrooms": 1,
     "area": "20 m2",
-    "price": 2800,
+    "price": 3000,
     "dateListed": "2026-10-09",
     "availableFrom": "2026-10-09",
     "features": "Apartamento Semi Mobiliado com 1 quarto 1 banheiro,sala & cozinha",
@@ -103,7 +104,8 @@
     ],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "apartamento-osiris"
+    "slug": "apartamento-osiris",
+    "pagePath": "imovel.html?slug=apartamento-osiris"
   },
   {
     "id": "casa-1791576030661",
@@ -150,7 +152,8 @@
     ],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "apartamento-aguia"
+    "slug": "apartamento-aguia",
+    "pagePath": "imovel.html?slug=apartamento-aguia"
   },
   {
     "id": "casa-1791576295637",
@@ -193,7 +196,8 @@
     ],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "sala-comercial-aguia"
+    "slug": "sala-comercial-aguia",
+    "pagePath": "imovel.html?slug=sala-comercial-aguia"
   },
   {
     "id": "casa-1791576976380",
@@ -252,7 +256,8 @@
     ],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "casa-set"
+    "slug": "casa-set",
+    "pagePath": "imovel.html?slug=casa-set"
   },
   {
     "id": "casa-1791577479997",
@@ -307,7 +312,8 @@
     ],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "kitnet-aguia"
+    "slug": "kitnet-aguia",
+    "pagePath": "imovel.html?slug=kitnet-aguia"
   },
   {
     "id": "casa-1791577620409",
@@ -346,7 +352,8 @@
     ],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "apartamento-aguia-2"
+    "slug": "apartamento-aguia-2",
+    "pagePath": "imovel.html?slug=apartamento-aguia-2"
   },
   {
     "id": "casa-1791578490623",
@@ -373,7 +380,8 @@
     ],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "casa-ano-bom-fundos"
+    "slug": "casa-ano-bom-fundos",
+    "pagePath": "imovel.html?slug=casa-ano-bom-fundos"
   },
   {
     "id": "casa-1791578687733",
@@ -395,7 +403,8 @@
     "gallery": [],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "casa-henrique-fuck"
+    "slug": "casa-henrique-fuck",
+    "pagePath": "imovel.html?slug=casa-henrique-fuck"
   },
   {
     "id": "casa-1791578828772",
@@ -417,7 +426,8 @@
     "gallery": [],
     "photoCredit": "",
     "photoSource": "",
-    "slug": "galpao-poco-danta"
+    "slug": "galpao-poco-danta",
+    "pagePath": "imovel.html?slug=galpao-poco-danta"
   },
   {
     "title": "Casarão",
@@ -476,7 +486,8 @@
     "availableFrom": "",
     "demo": false,
     "photoCredit": "",
-    "photoSource": ""
+    "photoSource": "",
+    "pagePath": "imovel.html?slug=casarao"
   },
   {
     "title": "Casa Esquina",
@@ -523,6 +534,7 @@
     "availableFrom": "",
     "demo": false,
     "photoCredit": "",
-    "photoSource": ""
+    "photoSource": "",
+    "pagePath": "imovel.html?slug=casa-esquina"
   }
 ]
