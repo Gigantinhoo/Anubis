@@ -80,9 +80,9 @@ function showAdminSetup(user) {
   $("not-admin-view").hidden = false;
   $("dashboard-view").hidden = true;
   $("user-toolbar").hidden = true;
-  $("user-id").textContent = user.id;
-  $("admin-sql").textContent =
-    "insert into public.admin_users (user_id) values ('" + user.id + "'::uuid) on conflict do nothing;";
+  showMessage("setup-message",
+    "A senha foi aceita para " + (user.email || "esta conta") + ", mas este usuário ainda não está autorizado no painel. Peça ao responsável pela ANUBIS para liberar o acesso.",
+    "error");
 }
 
 async function showDashboard(user) {
@@ -153,6 +153,7 @@ async function loadProperties() {
 
   $("property-count").textContent = properties.length + (properties.length === 1 ? " imóvel" : " imóveis");
   renderList();
+  renderPropertyCards();
 
   if (selectedId && properties.some(item => item.id === selectedId)) selectProperty(selectedId);
   else if (properties.length) selectProperty(properties[0].id);
@@ -223,12 +224,28 @@ function renderGallery() {
   galleryDraft.forEach((photo, index) => {
     const card = document.createElement("div");
     card.className = "gallery-item";
+    if (index === 0) {
+      const badge = document.createElement("span");
+      badge.className = "gallery-cover-badge";
+      badge.textContent = "Capa atual";
+      card.append(badge);
+    }
     const image = document.createElement("img");
     image.src = photo.localUrl || photo.src;
     image.alt = photo.alt || "Foto " + (index + 1);
     image.loading = "lazy";
     const label = document.createElement("p");
     label.textContent = photo.alt || "Foto " + (index + 1);
+    const cover = document.createElement("button");
+    cover.className = "admin-button";
+    cover.type = "button";
+    cover.textContent = index === 0 ? "Capa selecionada" : "Definir como capa";
+    cover.disabled = index === 0;
+    cover.addEventListener("click", () => {
+      const [chosen] = galleryDraft.splice(index, 1);
+      galleryDraft.unshift(chosen);
+      renderGallery();
+    });
     const remove = document.createElement("button");
     remove.className = "admin-button danger";
     remove.type = "button";
@@ -238,7 +255,76 @@ function renderGallery() {
       if (removed?.localUrl) URL.revokeObjectURL(removed.localUrl);
       renderGallery();
     });
-    card.append(image, label, remove);
+    card.append(image, label, cover, remove);
+    host.append(card);
+  });
+}
+
+function renderPropertyCards() {
+  const host = $("property-cards");
+  if (!host) return;
+  host.replaceChildren();
+  if (!properties.length) {
+    const empty = document.createElement("p");
+    empty.className = "property-catalog-empty";
+    empty.textContent = "Nenhum imóvel cadastrado.";
+    host.append(empty);
+    return;
+  }
+
+  properties.forEach(item => {
+    const card = document.createElement("article");
+    card.className = "property-card";
+    const photo = document.createElement("div");
+    photo.className = "property-card-photo";
+    const cover = item.image || item.gallery?.[0]?.src || "";
+    if (cover) {
+      const image = document.createElement("img");
+      image.src = cover;
+      image.alt = "Foto de " + (item.title || "imóvel");
+      image.loading = "lazy";
+      image.decoding = "async";
+      photo.append(image);
+    } else {
+      photo.textContent = "Sem foto de capa";
+    }
+    const copy = document.createElement("div");
+    copy.className = "property-card-copy";
+    const title = document.createElement("strong");
+    title.textContent = item.title || "Imóvel sem título";
+    const details = document.createElement("small");
+    details.textContent = [item.neighborhood, STATUS_LABELS[item.status] || item.status, item.price != null ? new Intl.NumberFormat("pt-BR", {style:"currency",currency:"BRL"}).format(item.price) + "/mês" : "Valor a consultar"].filter(Boolean).join(" · ");
+    const status = document.createElement("span");
+    status.className = "property-card-status";
+    status.textContent = STATUS_LABELS[item.status] || item.status || "IMÓVEL";
+    const copyButton = document.createElement("button");
+    copyButton.type = "button";
+    copyButton.className = "admin-button primary property-copy-link";
+    copyButton.textContent = "Copiar link para cliente";
+    copyButton.addEventListener("click", async () => {
+      const shareUrl = new URL("imovel.html?slug=" + encodeURIComponent(item.slug || item.id), location.href).href;
+      try {
+        if (navigator.clipboard?.writeText && window.isSecureContext) {
+          await navigator.clipboard.writeText(shareUrl);
+        } else {
+          const temp = document.createElement("textarea");
+          temp.value = shareUrl;
+          temp.setAttribute("readonly", "");
+          temp.style.position = "fixed";
+          temp.style.opacity = "0";
+          document.body.append(temp);
+          temp.select();
+          const copied = document.execCommand("copy");
+          temp.remove();
+          if (!copied) throw new Error("O navegador não permitiu copiar o link.");
+        }
+        showMessage("dashboard-message", "Link de " + item.title + " copiado para compartilhar com o cliente.", "success");
+      } catch (error) {
+        showMessage("dashboard-message", "Não foi possível copiar automaticamente. Link: " + shareUrl, "error");
+      }
+    });
+    copy.append(title, details, status, copyButton);
+    card.append(photo, copy);
     host.append(card);
   });
 }
@@ -274,7 +360,7 @@ function startNew() {
 async function compressPhoto(file) {
   if (!file.type.startsWith("image/")) throw new Error(file.name + " não é uma imagem.");
   const bitmap = await createImageBitmap(file);
-  const maxEdge = 1800;
+  const maxEdge = 1600;
   const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement("canvas");
   canvas.width = Math.max(1, Math.round(bitmap.width * scale));
@@ -284,7 +370,7 @@ async function compressPhoto(file) {
   context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
   bitmap.close();
   const blob = await new Promise((resolve, reject) => {
-    canvas.toBlob(result => result ? resolve(result) : reject(new Error("Falha ao comprimir a imagem.")), "image/jpeg", 0.82);
+    canvas.toBlob(result => result ? resolve(result) : reject(new Error("Falha ao comprimir a imagem.")), "image/jpeg", 0.78);
   });
   if (blob.size > 5 * 1024 * 1024) throw new Error("A foto comprimida ainda excede 5 MB.");
   return blob;
@@ -511,15 +597,6 @@ $("login-form").addEventListener("submit", async event => {
   } finally {
     $("login-button").disabled = false;
     $("login-button").textContent = "Entrar";
-  }
-});
-
-$("copy-admin-sql").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText($("admin-sql").textContent);
-    showMessage("setup-message", "SQL copiado. Execute-o no SQL Editor e depois clique em atualizar.", "success");
-  } catch (_) {
-    showMessage("setup-message", "Selecione e copie manualmente o SQL exibido acima.", "error");
   }
 });
 

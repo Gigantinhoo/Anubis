@@ -29,10 +29,11 @@
     .property-list button{width:100%;display:grid;gap:5px;text-align:left;background:transparent;border:1px solid transparent;color:var(--text);padding:12px;margin:3px 0;cursor:pointer}.property-list button:hover,.property-list button.active{background:#ffffff08;border-color:var(--line)}.property-list button.active{box-shadow:inset 3px 0 var(--gold)}.property-list small{color:var(--muted);font-size:11px}
     .editor{border:1px solid var(--line);background:var(--panel);padding:20px;min-width:0}.editor-top{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #ffffff14;padding-bottom:14px;margin-bottom:17px}.editor-top h2{font:500 24px Georgia,serif;margin:0}.editor-top small{color:var(--muted)}
     .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:grid;gap:7px;min-width:0}.field.full{grid-column:1/-1}.check-field{display:flex;gap:9px;align-items:center;color:var(--muted);font-size:12px}.check-field input{width:17px;height:17px;accent-color:var(--gold)}
-    .section-title{font:500 20px Georgia,serif;color:var(--gold2);margin:24px 0 10px}.gallery-box{border:1px solid #ffffff17;padding:13px;margin-top:15px}.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:13px}.gallery-item{border:1px solid #ffffff17;background:#0c0c0a;min-width:0}.gallery-item img{width:100%;height:100px;object-fit:cover;display:block;background:#222}.gallery-item p{font-size:10px;color:var(--muted);padding:0 8px;overflow-wrap:anywhere}.gallery-item button{margin:0 8px 8px;padding:6px 8px;font-size:10px}
+    .section-title{font:500 20px Georgia,serif;color:var(--gold2);margin:24px 0 10px}.gallery-box{border:1px solid #ffffff17;padding:13px;margin-top:15px}.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:13px}.gallery-item{position:relative;border:1px solid #ffffff17;background:#0c0c0a;min-width:0;padding-bottom:10px}.gallery-item img{width:100%;height:190px;object-fit:cover;display:block;background:#222}.gallery-item p{font-size:11px;color:var(--muted);padding:0 10px;overflow-wrap:anywhere}.gallery-item .admin-button{display:flex;width:calc(100% - 16px);margin:8px 8px 0;min-height:40px;padding:9px 8px;font-size:11px}.gallery-cover-badge{position:absolute;top:8px;left:8px;padding:6px 9px;background:var(--gold);color:#17140d;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
     .form-actions{display:flex;gap:9px;flex-wrap:wrap;border-top:1px solid #ffffff14;padding-top:17px;margin-top:20px}.helper{font-size:11px;color:var(--muted);line-height:1.6}.setup-sql{display:block;background:#0c0c0a;border:1px solid var(--line);padding:13px;overflow-wrap:anywhere;color:var(--gold2);margin:12px 0;white-space:pre-wrap}.top-right{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.signed-email{color:var(--muted);font-size:12px}
+    .property-catalog{margin-top:22px;border:1px solid var(--line);background:var(--panel);padding:20px}.property-catalog-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}.property-catalog h2{font:500 24px Georgia,serif;color:var(--gold2);margin:0 0 5px}.property-catalog-head p{margin:0;color:var(--muted);font-size:12px}.property-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:14px}.property-card{min-width:0;display:grid;grid-template-columns:minmax(145px,190px) minmax(0,1fr);align-items:stretch;gap:14px;padding:12px;background:#0d0d0b;border:1px solid #ffffff17;color:var(--text)}.property-card-photo{width:100%;min-height:142px;overflow:hidden;background:#24221c;display:grid;place-items:center;color:var(--muted);font-size:12px}.property-card-photo img{width:100%;height:100%;min-height:142px;object-fit:cover;display:block}.property-card-copy{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:9px}.property-card-copy strong{font:500 18px Georgia,serif;line-height:1.25;overflow-wrap:anywhere}.property-card-copy small{color:var(--muted);font-size:12px;line-height:1.45}.property-card-status{display:inline-flex;padding:5px 8px;border:1px solid var(--line);color:var(--gold2);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.property-copy-link{margin-top:auto;width:100%;min-height:46px;font-size:12px}.property-catalog-empty{padding:16px;border:1px dashed #ffffff20;color:var(--muted);font-size:12px}
     @media(max-width:820px){.admin-layout{grid-template-columns:1fr}.property-list{max-height:300px}.admin-heading{display:block}.top-right{margin-top:14px}}
-    @media(max-width:520px){.admin-shell{width:calc(100% - 20px);margin-top:18px}.admin-panel,.editor{padding:14px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.toolbar-actions{width:100%}.toolbar-actions .admin-button{flex:1}.form-actions .admin-button{width:100%}}
+    @media(max-width:520px){.admin-shell{width:calc(100% - 20px);margin-top:18px}.admin-panel,.editor,.property-catalog{padding:14px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.toolbar-actions{width:100%}.toolbar-actions .admin-button{flex:1}.form-actions .admin-button{width:100%}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.gallery-item img{height:176px}.gallery-item .admin-button{font-size:10px;padding:8px 5px}.property-cards{grid-template-columns:1fr;gap:12px}.property-card{grid-template-columns:1fr;gap:10px;padding:10px}.property-card-photo,.property-card-photo img{height:205px;min-height:205px}.property-card-copy{gap:8px}.property-card-copy strong{font-size:19px}.property-copy-link{min-height:50px;font-size:13px}}
   </style>
 </head>
 <body>
@@ -53,6 +54,7 @@
       </div>
       <div class="top-right" id="user-toolbar" hidden>
         <span class="signed-email" id="signed-email"></span>
+        <a class="admin-button primary" href="contrato/">Criar contrato ↗</a>
         <button class="admin-button" id="sign-out" type="button">Sair</button>
       </div>
     </div>
@@ -74,15 +76,10 @@
     </section>
 
     <section class="admin-panel" id="not-admin-view" hidden>
-      <h2>Autorizar este usuário</h2>
-      <p>O e-mail foi autenticado, mas ainda não possui permissão administrativa. Copie o comando abaixo e execute uma única vez no SQL Editor do seu projeto Supabase.</p>
-      <p class="helper">UUID do usuário autenticado:</p>
-      <code class="setup-sql" id="user-id"></code>
-      <code class="setup-sql" id="admin-sql"></code>
+      <h2>Acesso não autorizado</h2>
+      <p>Esta conta ainda não tem permissão para administrar os imóveis. Peça ao responsável pela ANUBIS para liberar o acesso.</p>
       <div class="toolbar-actions">
-        <button class="admin-button primary" id="copy-admin-sql" type="button">Copiar SQL de autorização</button>
-        <a class="admin-button" href="https://supabase.com/dashboard/project/cjjeohqshlttsvjcwgmx/sql/new" target="_blank" rel="noopener noreferrer">Abrir SQL Editor ↗</a>
-        <button class="admin-button" id="check-admin" type="button">Já autorizei — atualizar</button>
+        <button class="admin-button primary" id="check-admin" type="button">Verificar novamente</button>
       </div>
       <div class="message" id="setup-message" hidden></div>
     </section>
@@ -92,7 +89,7 @@
       <div class="admin-toolbar">
         <div>
           <strong id="property-count">0 imóveis</strong>
-          <p class="helper">Anúncios publicados aparecem automaticamente no catálogo do site.</p>
+          <p class="helper">Os imóveis ficam no painel administrativo. Compartilhe cada anúncio somente pelo link individual.</p>
         </div>
         <div class="toolbar-actions">
           <button class="admin-button" id="import-legacy" type="button">Importar / atualizar catálogo antigo</button>
@@ -165,7 +162,7 @@
             </label>
             <label class="check-field full">
               <input id="is-demo" name="is-demo" type="checkbox">
-              Marcar como anúncio demonstrativo (não aparece no catálogo público)
+              Marcar como anúncio demonstrativo (não aparece para clientes)
             </label>
           </div>
 
@@ -174,7 +171,7 @@
             <label class="field">Adicionar fotos
               <input id="photo-files" type="file" accept="image/jpeg,image/png,image/webp" multiple>
             </label>
-            <p class="helper">As fotos são comprimidas e enviadas ao Supabase Storage. Formatos aceitos: JPG, PNG e WebP; limite de 5 MB por foto após compressão.</p>
+            <p class="helper">Adicione as fotos e toque em <strong>Definir como capa</strong> na imagem que deve aparecer primeiro no anúncio. Formatos aceitos: JPG, PNG e WebP; limite de 5 MB por foto após compressão.</p>
             <div class="gallery-grid" id="gallery-grid"></div>
           </div>
 
@@ -185,8 +182,18 @@
           </div>
         </form>
       </div>
+
+      <section class="property-catalog" aria-labelledby="property-catalog-title">
+        <div class="property-catalog-head">
+          <div>
+            <h2 id="property-catalog-title">Todos os imóveis</h2>
+            <p>Veja as fotos dos imóveis e copie o link para enviar ao cliente.</p>
+          </div>
+        </div>
+        <div class="property-cards" id="property-cards"></div>
+      </section>
     </section>
   </main>
-  <script type="module" src="scripts/admin-supabase.js"></script>
+  <script type="module" src="scripts/admin-supabase.js?v=20261128-anubis-fixes-v1"></script>
 </body>
 </html>
