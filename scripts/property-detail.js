@@ -29,8 +29,8 @@ function showError(message) {
   host.replaceChildren();
   const box = node("section", "load-error");
   box.append(node("h1", "", "Não foi possível abrir este imóvel"), node("p", "", message));
-  const back = node("a", "contact-button", "Voltar para a ANUBIS");
-  back.href = "index.html#imoveis";
+  const back = node("a", "contact-button", "Voltar ao site da ANUBIS");
+  back.href = "index.html#contato";
   box.append(back);
   host.append(box);
 }

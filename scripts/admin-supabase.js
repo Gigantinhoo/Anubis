@@ -6,6 +6,7 @@ let properties = [];
 let selectedId = null;
 let galleryDraft = [];
 let busy = false;
+let sessionTransition = Promise.resolve();
 
 const STATUS_LABELS = {
   available: "Disponível",
@@ -71,22 +72,34 @@ function normalizeGallery(row) {
 function showLogin() {
   $("login-view").hidden = false;
   $("not-admin-view").hidden = true;
+  $("password-recovery-view").hidden = true;
   $("dashboard-view").hidden = true;
   $("user-toolbar").hidden = true;
 }
 
+function showPasswordRecovery() {
+  $("login-view").hidden = true;
+  $("not-admin-view").hidden = true;
+  $("dashboard-view").hidden = true;
+  $("user-toolbar").hidden = true;
+  $("password-recovery-view").hidden = false;
+  showMessage("recovery-message", "", "");
+}
+
 function showAdminSetup(user) {
   $("login-view").hidden = true;
+  $("password-recovery-view").hidden = true;
   $("not-admin-view").hidden = false;
   $("dashboard-view").hidden = true;
   $("user-toolbar").hidden = true;
   showMessage("setup-message",
-    "A senha foi aceita para " + (user.email || "esta conta") + ", mas este usuário ainda não está autorizado no painel. Peça ao responsável pela ANUBIS para liberar o acesso.",
+    "A autenticação foi aceita para " + (user.email || "esta conta") + ", mas este usuário ainda não está autorizado no painel. A conta precisa constar em public.admin_users no Supabase.",
     "error");
 }
 
 async function showDashboard(user) {
   $("login-view").hidden = true;
+  $("password-recovery-view").hidden = true;
   $("not-admin-view").hidden = true;
   $("dashboard-view").hidden = false;
   $("user-toolbar").hidden = false;
@@ -95,36 +108,49 @@ async function showDashboard(user) {
 }
 
 async function handleSession(nextSession) {
-  session = nextSession;
+  session = nextSession || null;
   if (!session) {
     showLogin();
     return;
   }
 
   $("login-view").hidden = true;
+  $("password-recovery-view").hidden = true;
   $("not-admin-view").hidden = true;
   $("dashboard-view").hidden = true;
   $("user-toolbar").hidden = true;
 
-  const { data, error } = await supabase
-    .from("admin_users")
-    .select("user_id")
-    .eq("user_id", session.user.id)
-    .maybeSingle();
+  try {
+    const { data, error } = await supabase
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
 
-  if (error) {
-    showAdminSetup(session.user);
-    showMessage("setup-message",
-      "Não foi possível verificar a permissão. Confira se o esquema inicial do Supabase foi aplicado. Detalhe: " + error.message,
-      "error");
-    return;
-  }
+    if (error) {
+      showAdminSetup(session.user);
+      showMessage("setup-message",
+        "A conta entrou, mas o Supabase não conseguiu consultar a permissão administrativa. Detalhe: " + error.message,
+        "error");
+      return;
+    }
 
-  if (!data) {
+    if (!data) {
+      showAdminSetup(session.user);
+      return;
+    }
+    await showDashboard(session.user);
+  } catch (error) {
     showAdminSetup(session.user);
-    return;
+    showMessage("setup-message", "Falha ao abrir o painel: " + (error?.message || String(error)), "error");
   }
-  await showDashboard(session.user);
+}
+
+function queueSession(nextSession) {
+  sessionTransition = sessionTransition
+    .catch(() => {})
+    .then(() => handleSession(nextSession));
+  return sessionTransition;
 }
 
 async function loadProperties() {
@@ -580,7 +606,7 @@ async function importLegacyCatalog() {
 
 $("login-form").addEventListener("submit", async event => {
   event.preventDefault();
-  const email = $("login-email").value.trim();
+  const email = $("login-email").value.trim().toLowerCase();
   const password = $("login-password").value;
   if (!email || !password) return;
 
@@ -588,15 +614,79 @@ $("login-form").addEventListener("submit", async event => {
   $("login-button").textContent = "Entrando...";
   showMessage("login-message", "", "");
   try {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    // A sessão é tratada pelo listener onAuthStateChange abaixo.
+    if (!data?.session) {
+      const current = await supabase.auth.getSession();
+      if (current.error) throw current.error;
+      if (!current.data?.session) throw new Error("O Supabase não retornou uma sessão. Tente novamente.");
+      await queueSession(current.data.session);
+    } else {
+      await queueSession(data.session);
+    }
   } catch (error) {
-    const message = error?.message || "Confira o e-mail e a senha e tente novamente.";
+    const code = error?.code || error?.name || "";
+    const message = /invalid.login.credentials/i.test(error?.message || "") || code === "invalid_credentials"
+      ? "O Supabase recusou o e-mail e a senha. Confirme se o e-mail é exatamente o cadastrado em Authentication → Users e redefina a senha se necessário."
+      : (error?.message || "Confira o e-mail e a senha e tente novamente.");
     showMessage("login-message", "Não foi possível entrar: " + message, "error");
   } finally {
     $("login-button").disabled = false;
     $("login-button").textContent = "Entrar";
+  }
+});
+
+$("forgot-password").addEventListener("click", async () => {
+  const email = $("login-email").value.trim().toLowerCase();
+  if (!email) {
+    showMessage("login-message", "Informe seu e-mail no campo acima para receber o link de redefinição.", "error");
+    $("login-email").focus();
+    return;
+  }
+  const button = $("forgot-password");
+  button.disabled = true;
+  button.textContent = "Enviando...";
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: location.origin + location.pathname
+    });
+    if (error) throw error;
+    showMessage("login-message", "Se este e-mail estiver cadastrado, o Supabase enviará um link para redefinir a senha. Verifique também o spam.", "success");
+  } catch (error) {
+    showMessage("login-message", "Não foi possível solicitar a redefinição: " + (error?.message || String(error)), "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Esqueci minha senha";
+  }
+});
+
+$("password-recovery-form").addEventListener("submit", async event => {
+  event.preventDefault();
+  const password = $("new-password").value;
+  const confirmation = $("confirm-password").value;
+  if (password.length < 8) {
+    showMessage("recovery-message", "A senha precisa ter pelo menos 8 caracteres.", "error");
+    return;
+  }
+  if (password !== confirmation) {
+    showMessage("recovery-message", "As senhas não coincidem.", "error");
+    return;
+  }
+  const button = $("save-new-password");
+  button.disabled = true;
+  button.textContent = "Salvando...";
+  try {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw error;
+    showMessage("recovery-message", "Senha atualizada. Abrindo o painel...", "success");
+    const { data, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    await queueSession(data?.session || null);
+  } catch (error) {
+    showMessage("recovery-message", "Não foi possível atualizar a senha: " + (error?.message || String(error)), "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Salvar nova senha";
   }
 });
 
@@ -621,10 +711,22 @@ $("photo-files").addEventListener("change", event => {
   event.target.value = "";
 });
 
-const { data: authListener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-  Promise.resolve().then(() => handleSession(nextSession));
+const { data: authListener } = supabase.auth.onAuthStateChange((event, nextSession) => {
+  // Defer UI and database work until after Supabase finishes its auth callback.
+  Promise.resolve().then(() => {
+    if (event === "PASSWORD_RECOVERY") {
+      showPasswordRecovery();
+      return;
+    }
+    return queueSession(nextSession);
+  });
 });
 
-const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-if (sessionError) showMessage("login-message", "Falha ao verificar a sessão: " + sessionError.message, "error");
-await handleSession(sessionData?.session || null);
+try {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+  await queueSession(sessionData?.session || null);
+} catch (error) {
+  showLogin();
+  showMessage("login-message", "Falha ao verificar a sessão: " + (error?.message || String(error)), "error");
+}

@@ -1,0 +1,32 @@
+ANUBIS IMÓVEIS — ALTERAÇÕES DESTA VERSÃO
+
+1. Página inicial pública
+- Removido o catálogo de imóveis da home.
+- A home mantém apenas apresentação da ANUBIS, informações institucionais e contato.
+- Removidos os links de navegação e chamadas que levavam ao catálogo público.
+
+2. Painel administrativo
+- Corrigida a inicialização do JavaScript: removida a referência a um botão antigo de SQL que não existe mais no HTML e interrompia o restante do script.
+- Corrigida a mensagem de conta autenticada sem permissão, sem referências a elementos removidos.
+- Restaurada a criação dos cartões de imóveis no painel, com botão individual “Copiar link para cliente”.
+- Adicionado fallback para copiar links em navegadores sem Clipboard API.
+- Adicionada seleção de foto de capa: “Definir como capa” move a foto escolhida para a primeira posição.
+- Aumentado o tamanho de visualização das fotos no painel, especialmente em telas pequenas.
+- Adicionado no topo do painel o atalho “Criar contrato ↗”, que abre contrato/.
+- Não há botão duplicado de edição nos cartões; a edição continua pela lista de imóveis.
+
+3. Gerador de contratos
+- Mantido em página independente em contrato/.
+- Não foram alterados o banco, as tabelas, os registros nem os textos das cláusulas.
+- Ajustados os espaçamentos e margens de impressão para A4.
+- Mantidas as cláusulas 16ª e 17ª juntas no mesmo bloco de paginação.
+- Aumentado o espaço entre linhas e assinaturas.
+- Melhorado o retorno visual do login e o estado do botão durante a autenticação.
+
+4. Otimização de imagens
+- Novas fotos enviadas pelo painel são redimensionadas para até 1600 px no maior lado e convertidas para JPEG com qualidade 78%, reduzindo o peso dos arquivos sem exigir compressão manual.
+
+IMPORTANTE SOBRE PDFs
+- Este repositório contém o gerador de contrato, que produz um documento textual sem fotografias.
+- O gerador/arquivo separado do laudo fotográfico de vistoria não está incluído neste ZIP. A compressão aplicada às fotos do painel reduz o peso de novas imagens armazenadas, mas não altera retroativamente um PDF de vistoria que tenha sido gerado fora deste projeto.
+- Nenhuma migração SQL é necessária para estas alterações.

@@ -1,0 +1,30 @@
+ANUBIS IMÓVEIS — CORREÇÕES DE 28/11/2026
+
+1. HOME
+- A página inicial não carrega o catálogo público nem o script de listagem de imóveis.
+- Os imóveis permanecem acessíveis por suas páginas individuais, usando imovel.html?slug=...
+- Foram atualizadas as versões dos arquivos CSS/JS da home para evitar reaproveitamento de arquivos antigos em cache.
+
+2. LOGIN ADMINISTRATIVO
+- O e-mail é normalizado para letras minúsculas antes da autenticação.
+- O fluxo agora verifica a sessão retornada pelo Supabase e atualiza a interface após o login.
+- A verificação de sessão foi serializada para evitar disputa entre a inicialização e os eventos de autenticação.
+- Foi incluído fluxo de recuperação de senha por e-mail e formulário para cadastrar a nova senha.
+- Erros de autenticação e de permissão são apresentados separadamente.
+
+3. LINKS INDIVIDUAIS
+- A seção “Todos os imóveis” permanece no final do painel administrativo, dentro da área autenticada.
+- Cada registro carregado do Supabase gera um botão “Copiar link para cliente”.
+- O link é montado a partir do slug do imóvel e abre imovel.html?slug=...
+
+VERIFICAÇÃO DO SUPABASE
+- O projeto cjjeohqshlttsvjcwgmx respondeu como ACTIVE_HEALTHY.
+- A tabela public.admin_users contém as duas contas de administrador existentes e confirmadas.
+- A tabela public.properties contém 14 imóveis no momento da verificação.
+- Não foi alterada nenhuma senha no banco.
+
+IMPORTANTE SOBRE A SENHA
+O código do site não consegue corrigir uma senha incorreta. Se o Supabase recusar a combinação de e-mail/senha, use “Esqueci minha senha” na tela de login. O envio do link depende das configurações de e-mail e da URL de redirecionamento permitida no Supabase Auth.
+
+PUBLICAÇÃO
+Substitua os arquivos do site pelos arquivos deste pacote, preservando a estrutura de pastas. Depois da publicação, abra https://anubisimoveis.com/admin.html e, se necessário, faça uma atualização forçada do navegador (Ctrl+F5).
